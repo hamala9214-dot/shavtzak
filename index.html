@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שבצק פלוגה א׳ — טייגר</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1e2530;
+    --border: #2a3340;
+    --accent: #e8a020;
+    --accent2: #c47a10;
+    --text: #e6edf3;
+    --text-muted: #7d8fa0;
+    --text-dim: #4a5568;
+    --danger: #e05252;
+    --success: #3fb950;
+    --shift1: #1a3a4a;
+    --shift2: #1a2e1a;
+    --shift3: #2e1a2e;
+    --radius: 8px;
+    --radius-sm: 4px;
+    --font: 'Heebo', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+
+  .header-actions { display: flex; align-items: center; gap: 12px; }
+
+  .btn {
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    padding: 7px 14px;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #f0b030; }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+  .btn-danger:hover { background: var(--danger); color: white; }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .btn-success { background: var(--success); color: #000; }
+  .btn-success:hover { background: #5fd070; }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  .tab {
+    padding: 12px 18px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    font-size: 13px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ===== MAIN ===== */
+  main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 16px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title-accent { color: var(--accent); }
+
+  /* ===== FORMS ===== */
+  .form-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+  label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+  input, select, textarea {
+    font-family: var(--font);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 8px 10px;
+    font-size: 13px;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  input::placeholder { color: var(--text-dim); }
+  select option { background: var(--surface2); }
+
+  /* ===== TABLE ===== */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: right;
+    padding: 10px 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tr:hover td { background: var(--surface2); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ===== TAGS ===== */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag:hover { border-color: var(--danger); color: var(--danger); }
+  .tag-accent { background: rgba(232,160,32,0.15); border-color: var(--accent); color: var(--accent); }
+
+  /* ===== SEARCH ===== */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .search-wrap input { padding-right: 36px; }
+  .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  /* ===== ROSTER GRID ===== */
+  .roster-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .date-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .date-display {
+    font-weight: 700;
+    font-size: 16px;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .roster-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .shift-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .shift-header {
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .shift-0 .shift-header { background: var(--shift1); border-color: #1e4a60; }
+  .shift-1 .shift-header { background: var(--shift2); border-color: #1e401e; }
+  .shift-2 .shift-header { background: var(--shift3); border-color: #401e40; }
+  .shift-allday .shift-header { background: rgba(232,160,32,0.1); border-color: rgba(232,160,32,0.3); }
+
+  .shift-time { color: var(--text-muted); font-size: 11px; font-weight: 400; }
+
+  .positions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .position-cell {
+    background: var(--surface);
+    padding: 12px;
+  }
+  .position-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .position-capacity {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .soldier-slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+  }
+  .soldier-slot:last-child { margin-bottom: 0; }
+  .slot-empty {
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 11px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    justify-content: center;
+  }
+  .slot-conflict { border-color: var(--danger); background: rgba(224,82,82,0.08); color: var(--danger); }
+  .slot-remove {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 2px;
+    line-height: 1;
+    font-family: var(--font);
+  }
+  .slot-remove:hover { color: var(--danger); }
+
+  /* ===== STATS BAR ===== */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-value { font-size: 24px; font-weight: 900; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ===== ABSENCE CALENDAR ===== */
+  .absence-list { display: flex; flex-direction: column; gap: 8px; }
+  .absence-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  .absence-soldier { font-weight: 600; flex: 1; }
+  .absence-dates { color: var(--text-muted); font-size: 12px; }
+  .absence-reason { color: var(--text-dim); font-size: 11px; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    min-width: 380px;
+    max-width: 480px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .modal-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    font-family: var(--font);
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+  /* ===== LOGIN ===== */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg);
+  }
+  .login-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    width: 320px;
+    text-align: center;
+  }
+  .login-logo {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+  .login-sub {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-bottom: 24px;
+  }
+  .login-box input {
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+  .login-error { color: var(--danger); font-size: 12px; margin-top: 8px; }
+
+  /* ===== PILLS ===== */
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-green { background: rgba(63,185,80,0.15); color: var(--success); }
+  .pill-red { background: rgba(224,82,82,0.15); color: var(--danger); }
+  .pill-yellow { background: rgba(232,160,32,0.15); color: var(--accent); }
+
+  /* ===== ASSIGN DROPDOWN ===== */
+  .assign-select {
+    font-size: 11px;
+    padding: 4px 6px;
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  /* ===== LOAD DIVIDER ===== */
+  .load-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .load-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    flex: 1;
+    overflow: hidden;
+  }
+  .load-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .load-text { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .empty-state .icon { font-size: 32px; margin-bottom: 8px; }
+
+  /* ===== SKILLS CHECKBOXES ===== */
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .skill-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .skill-check input[type=checkbox] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  /* ===== ALERT ===== */
+  .alert {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .alert-info { background: rgba(232,160,32,0.1); border: 1px solid rgba(232,160,32,0.3); color: var(--accent); }
+  .alert-danger { background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.3); color: var(--danger); }
+
+  @media (max-width: 768px) {
+    main { padding: 12px; }
+    .positions-grid { grid-template-columns: 1fr 1fr; }
+    .modal { min-width: unset; }
+    .form-row { flex-direction: column; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">⚔ שבצק</div>
+    <div class="login-sub">פלוגה א׳ — טייגר</div>
+    <input type="password" id="login-pass" placeholder="סיסמת מנהל" />
+    <button class="btn btn-primary" style="width:100%" onclick="tryLogin()">כניסת מנהל</button>
+    <div style="margin-top:10px">
+      <button class="btn btn-ghost" style="width:100%;font-size:12px" onclick="viewerLogin()">כניסה כחייל (צפייה בלבד)</button>
+    </div>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<header>
+  <div class="logo">
+    <span>⚔ שבצק פלוגה א׳</span>
+    <span style="color:var(--text-muted);font-size:13px;font-weight:400">טייגר</span>
+    <span class="logo-badge" id="mode-badge">מנהל</span>
+  </div>
+  <div class="header-actions">
+    <span id="header-date" style="color:var(--text-muted);font-size:13px"></span>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">יציאה</button>
+  </div>
+</header>
+
+<div class="tabs" id="main-tabs">
+  <div class="tab active" onclick="showTab('roster',this)">סידור יומי</div>
+  <div class="tab" onclick="showTab('soldiers',this)" id="tab-soldiers">חיילים</div>
+  <div class="tab" onclick="showTab('absences',this)" id="tab-absences">היעדרויות</div>
+  <div class="tab" onclick="showTab('load',this)" id="tab-load">עומס</div>
+  <div class="tab" onclick="showTab('import',this)" id="tab-import">📥 ייבוא Excel</div>
+</div>
+
+<main>
+
+  <!-- ===== ROSTER ===== -->
+  <div class="section active" id="section-roster">
+    <div class="roster-controls">
+      <div class="date-nav">
+        <button class="btn btn-ghost btn-sm" onclick="changeDate(-1)">◀</button>
+        <div class="date-display" id="date-display"></div>
+        <button class="btn btn-ghost btn-sm" onclick="changeDate(1)">▶</button>
+      </div>
+      <input type="date" id="date-picker" style="width:160px" onchange="setDateFromPicker()">
+      <button class="btn btn-primary btn-sm" id="btn-auto" onclick="autoSchedule()" style="display:none">⚡ סידור אוטומטי</button>
+      <button class="btn btn-success btn-sm" id="btn-save-roster" onclick="saveRoster()" style="display:none">💾 שמור</button>
+    </div>
+
+    <div id="roster-content"></div>
+  </div>
+
+  <!-- ===== SOLDIERS ===== -->
+  <div class="section" id="section-soldiers">
+    <div class="card" id="add-soldier-form" style="display:none">
+      <div class="card-title">➕ <span class="card-title-accent">הוספת חייל</span></div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group">
+          <label>שם מלא</label>
+          <input type="text" id="s-name" placeholder="ישראל ישראלי">
+        </div>
+        <div class="form-group">
+          <label>מספר אישי</label>
+          <input type="text" id="s-id" placeholder="1234567">
+        </div>
+        <div class="form-group">
+          <label>דרגה</label>
+          <select id="s-rank">
+            <option>טוראי</option>
+            <option>רב טוראי</option>
+            <option>סמל</option>
+            <option>רב סמל</option>
+            <option>רס"ל</option>
+            <option>סגן</option>
+            <option>סרן</option>
+            <option>רס"ן</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label>כישורים / הכשרות</label>
+        <div class="skills-grid" id="skills-checkboxes"></div>
+      </div>
+      <div class="form-row">
+        <button class="btn btn-primary" onclick="addSoldier()">הוסף חייל</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('add-soldier-form').style.display='none'">ביטול</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between">
+        <span>👥 <span class="card-title-accent">רשימת חיילים</span></span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="search-wrap" style="margin:0">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="soldier-search" placeholder="חיפוש..." style="width:180px" oninput="renderSoldiers()">
+          </div>
+          <button class="btn btn-primary btn-sm" id="btn-add-soldier" onclick="showAddSoldier()">+ הוסף</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>שם</th>
+              <th>מ"א</th>
+              <th>דרגה</th>
+              <th>כישורים</th>
+              <th>משמרות</th>
+              <th id="th-actions" style="display:none">פעולות</th>
+            </tr>
+          </thead>
+          <tbody id="soldiers-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABSENCES ===== -->
+  <div class="section" id="section-absences">
+    <div class="card" id="add-absence-form" style="display:none">
+      <div class="card-title">➕ <span class="card-title-accent">הוספת היעדרות</span></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>חייל</label>
+          <select id="abs-soldier"></select>
+        </div>
+        <div class="form-group">
+          <label>מתאריך</label>
+          <input type="date" id="abs-from">
+        </div>
+        <div class="form-group">
+          <label>עד תאריך</label>
+          <input type="date" id="abs-to">
+        </div>
+        <div class="form-group">
+          <label>סיבה</label>
+          <input type="text" id="abs-reason" placeholder="חופשה / מחלה / אחר">
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:12px">
+        <button class="btn btn-primary" onclick="addAbsence()">הוסף</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('add-absence-form').style.display='none'">ביטול</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="justify-content:space-between">
+        <span>📅 <span class="card-title-accent">היעדרויות</span></span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="search-wrap" style="margin:0">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="absence-search" placeholder="חיפוש..." style="width:180px" oninput="renderAbsences()">
+          </div>
+          <button class="btn btn-primary btn-sm" id="btn-add-absence" onclick="showAddAbsence()">+ הוסף</button>
+        </div>
+      </div>
+      <div id="absence-list-wrap"></div>
+    </div>
+  </div>
+
+  <!-- ===== IMPORT ===== -->
+  <div class="section" id="section-import">
+    <div class="card">
+      <div class="card-title">📥 <span class="card-title-accent">ייבוא קובץ Excel</span></div>
+
+      <div class="alert alert-info" style="margin-bottom:16px">
+        <strong>מבנה הקובץ הנדרש:</strong><br>
+        Sheet 1 בשם <code>חיילים</code> — עמודות: <strong>מ"א | שם | דרגה | כישורים</strong> (כישורים מופרדים בפסיק)<br>
+        Sheet 2 בשם <code>היעדרויות</code> — עמודות: <strong>מ"א | מתאריך | עד תאריך | סיבה</strong> (תאריכים בפורמט YYYY-MM-DD או DD/MM/YYYY)
+      </div>
+
+      <div id="import-dropzone"
+        style="border:2px dashed var(--border);border-radius:var(--radius);padding:40px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:16px"
+        onclick="document.getElementById('excel-file-input').click()"
+        ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+        ondragleave="this.style.borderColor='var(--border)'"
+        ondrop="handleExcelDrop(event)">
+        <div style="font-size:32px;margin-bottom:8px">📊</div>
+        <div style="color:var(--text-muted);font-size:13px">גרור קובץ Excel לכאן או לחץ לבחירה</div>
+        <div style="color:var(--text-dim);font-size:11px;margin-top:4px">.xlsx / .xls</div>
+      </div>
+      <input type="file" id="excel-file-input" accept=".xlsx,.xls" style="display:none" onchange="handleExcelFile(this.files[0])">
+
+      <div id="import-preview" style="display:none">
+        <hr class="divider">
+        <div class="card-title">תצוגה מקדימה לפני ייבוא</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:8px">👥 חיילים שיתעדכנו / יתווספו</div>
+            <div id="preview-soldiers" style="max-height:300px;overflow-y:auto"></div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:8px">📅 היעדרויות שיתווספו</div>
+            <div id="preview-absences" style="max-height:300px;overflow-y:auto"></div>
+          </div>
+        </div>
+
+        <div id="import-summary" class="alert alert-info" style="margin-bottom:16px"></div>
+
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-primary" onclick="confirmImport()">✅ אשר ייבוא</button>
+          <button class="btn btn-ghost" onclick="cancelImport()">ביטול</button>
+        </div>
+      </div>
+
+      <div id="import-result" style="display:none"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📄 <span class="card-title-accent">הורד תבנית Excel</span></div>
+      <div style="color:var(--text-muted);font-size:13px;margin-bottom:14px">הורד קובץ תבנית מוכן עם כותרות נכונות ושורות דוגמה.</div>
+      <button class="btn btn-ghost" onclick="downloadTemplate()">⬇ הורד תבנית</button>
+    </div>
+  </div>
+
+
+  <!-- ===== LOAD ===== -->
+  <div class="section" id="section-load">
+    <div class="stats-bar" id="stats-bar"></div>
+    <div class="card">
+      <div class="card-title">📊 <span class="card-title-accent">עומס משמרות לחייל</span></div>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="load-search" placeholder="חיפוש חייל..." oninput="renderLoad()">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>שם</th>
+              <th>דרגה</th>
+              <th>סה"כ משמרות</th>
+              <th>עומס יחסי</th>
+            </tr>
+          </thead>
+          <tbody id="load-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- EDIT SLOT MODAL -->
+<div class="modal-overlay" id="modal-slot">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modal-slot-title">שינוי חייל</span>
+      <button class="modal-close" onclick="closeModal('modal-slot')">✕</button>
+    </div>
+    <div id="modal-slot-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-slot')">ביטול</button>
+      <button class="btn btn-primary" onclick="confirmSlotChange()">אשר</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT SOLDIER MODAL -->
+<div class="modal-overlay" id="modal-soldier">
+  <div class="modal">
+    <div class="modal-title">
+      <span>עריכת חייל</span>
+      <button class="modal-close" onclick="closeModal('modal-soldier')">✕</button>
+    </div>
+    <div id="modal-soldier-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-soldier')">ביטול</button>
+      <button class="btn btn-primary" onclick="saveEditSoldier()">שמור</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD POSITION MODAL -->
+<div class="modal-overlay" id="modal-position">
+  <div class="modal">
+    <div class="modal-title">
+      <span>הוספת משימה/עמדה</span>
+      <button class="modal-close" onclick="closeModal('modal-position')">✕</button>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label>שם העמדה</label>
+      <input type="text" id="new-pos-name" placeholder="שם העמדה">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>כמות חיילים</label>
+        <input type="number" id="new-pos-count" value="1" min="1" max="20">
+      </div>
+      <div class="form-group">
+        <label>סוג</label>
+        <select id="new-pos-type">
+          <option value="shift">משמרת רגילה</option>
+          <option value="allday">כל היום</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label>כישורים נדרשים (אופציונלי)</label>
+      <div class="skills-grid" id="pos-skills-checkboxes"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-position')">ביטול</button>
+      <button class="btn btn-primary" onclick="addPosition()">הוסף</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+// ===== FIREBASE =====
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDArHsfO3Qujj6-y_X_wNKEUIcoU6Ho2fM",
+  authDomain: "tiger-roster.firebaseapp.com",
+  projectId: "tiger-roster",
+  storageBucket: "tiger-roster.firebasestorage.app",
+  messagingSenderId: "1039346333362",
+  appId: "1:1039346333362:web:a5711d7285ae8d5cfffbab"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+
+// ===== FIRESTORE HELPERS =====
+async function fbGet(docPath) {
+  const snap = await getDoc(doc(db, ...docPath.split('/')));
+  return snap.exists() ? snap.data() : null;
+}
+async function fbSet(docPath, data) {
+  await setDoc(doc(db, ...docPath.split('/')), data);
+}
+function fbListen(docPath, cb) {
+  return onSnapshot(doc(db, ...docPath.split('/')), snap => {
+    cb(snap.exists() ? snap.data() : null);
+  });
+}
+
+// Expose to global scope for non-module script
+window._fb = { fbGet, fbSet, fbListen, db, collection, getDocs, doc };
+window._fbReady = true;
+window.dispatchEvent(new Event('fbReady'));
+</script>
+
+<script>
+// ===== STATE =====
+const ADMIN_PASS = 'admin123';
+let isAdmin = false;
+let currentDate = new Date();
+currentDate.setHours(0,0,0,0);
+
+const DEFAULT_SKILLS = ['נהג','חובש','מפקד'];
+
+const DEFAULT_POSITIONS = [
+  { id: 'p1', name: 'סיור', count: 4, type: 'shift', skills: [], slotLabels: ['מפקד','נהג'] },
+  { id: 'p2', name: 'כרמל א', count: 8, type: 'allday', skills: [], slotLabels: ['מפקד','נהג'] },
+  { id: 'p3', name: 'כרמל ב', count: 4, type: 'allday', skills: [], slotLabels: ['מפקד','נהג'] },
+  { id: 'p4', name: 'חמל', count: 1, type: 'shift', skills: [] },
+  { id: 'p5', name: 'משימות מיוחדות', count: 12, type: 'allday', skills: [] },
+  { id: 'p6', name: 'חפ"ק', count: 4, type: 'allday', skills: [], slotLabels: ['מפקד','נהג'] },
+];
+
+const SHIFTS = [
+  { id: 0, label: 'משמרת א׳', time: '00:00–08:00' },
+  { id: 1, label: 'משמרת ב׳', time: '08:00–16:00' },
+  { id: 2, label: 'משמרת ג׳', time: '16:00–00:00' },
+];
+
+// ===== FIREBASE SAVE/LOAD (replaces localStorage) =====
+let _unsubRoster = null;
+
+async function fbSave(collection, data) {
+  if (!window._fbReady) return;
+  await window._fb.fbSet(`data/${collection}`, { value: JSON.stringify(data) });
+}
+
+async function fbLoad(collection, def) {
+  if (!window._fbReady) return def;
+  const d = await window._fb.fbGet(`data/${collection}`);
+  return d && d.value ? JSON.parse(d.value) : def;
+}
+
+// Legacy localStorage shim (fallback only)
+function save(key, val) { fbSave(key, val); }
+
+let soldiers = [];
+let absences = [];
+let rosters = {};
+let positions = DEFAULT_POSITIONS;
+let skills = DEFAULT_SKILLS;
+let editSlotCtx = null;
+let editSoldierCtx = null;
+let _rosterListener = null;
+
+// ===== AUTH =====
+function tryLogin() {
+  const p = document.getElementById('login-pass').value;
+  if (p === ADMIN_PASS) {
+    isAdmin = true;
+    document.getElementById('mode-badge').textContent = 'מנהל';
+    document.getElementById('mode-badge').style.background = '#e8a020';
+    launchApp();
+  } else {
+    document.getElementById('login-error').textContent = 'סיסמה שגויה';
+  }
+}
+function viewerLogin() {
+  isAdmin = false;
+  document.getElementById('mode-badge').textContent = 'צופה';
+  document.getElementById('mode-badge').style.background = '#7d8fa0';
+  launchApp();
+}
+function logout() {
+  if (_rosterListener) { _rosterListener(); _rosterListener = null; }
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').textContent = '';
+  isAdmin = false;
+}
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+async function launchApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  // Show loading state
+  document.getElementById('roster-content').innerHTML = '<div class="empty-state"><div class="icon">⏳</div><div>טוען נתונים...</div></div>';
+
+  // Load all data from Firestore
+  try {
+    const [s, a, r, p, sk] = await Promise.all([
+      fbLoad('soldiers', []),
+      fbLoad('absences', []),
+      fbLoad('rosters', {}),
+      fbLoad('positions', DEFAULT_POSITIONS),
+      fbLoad('skills', DEFAULT_SKILLS),
+    ]);
+    soldiers = s;
+    absences = a;
+    rosters = r;
+    positions = p;
+    skills = sk;
+  } catch(e) {
+    console.error('Firebase load error:', e);
+    document.getElementById('roster-content').innerHTML = '<div class="empty-state" style="color:var(--danger)"><div class="icon">⚠️</div><div>שגיאה בחיבור ל-Firebase. בדוק חיבור אינטרנט.</div></div>';
+    return;
+  }
+
+  // Live listener on rosters so all viewers see updates in real-time
+  if (_rosterListener) _rosterListener();
+  _rosterListener = window._fb.fbListen('data/rosters', (d) => {
+    if (d && d.value) { rosters = JSON.parse(d.value); renderRoster(); }
+  });
+
+  applyAdminUI();
+  renderAll();
+  updateHeaderDate();
+  setDatePicker();
+}
+
+function applyAdminUI() {
+  const adminOnly = ['btn-add-soldier','btn-add-absence','btn-auto','btn-save-roster','tab-soldiers','tab-absences','tab-import','tab-load'];
+  adminOnly.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isAdmin ? '' : 'none';
+  });
+  const thActions = document.getElementById('th-actions');
+  if (thActions) thActions.style.display = isAdmin ? '' : 'none';
+}
+
+// ===== TABS =====
+function showTab(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const section = document.getElementById('section-' + name);
+  if (section) section.classList.add('active');
+  const target = el || (window.event && window.event.target);
+  if (target && target.classList) target.classList.add('active');
+  if (name === 'load') renderLoad();
+  if (name === 'soldiers') renderSoldiers();
+  if (name === 'absences') renderAbsences();
+}
+
+// ===== DATE =====
+function dateStr(d) {
+  return d.toISOString().split('T')[0];
+}
+function hebrewDate(d) {
+  const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  return `יום ${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+function updateHeaderDate() {
+  document.getElementById('header-date').textContent = hebrewDate(currentDate);
+  document.getElementById('date-display').textContent = dateStr(currentDate);
+}
+function setDatePicker() {
+  document.getElementById('date-picker').value = dateStr(currentDate);
+}
+function changeDate(delta) {
+  currentDate.setDate(currentDate.getDate() + delta);
+  updateHeaderDate();
+  setDatePicker();
+  renderRoster();
+}
+function setDateFromPicker() {
+  const v = document.getElementById('date-picker').value;
+  if (v) { currentDate = new Date(v + 'T00:00:00'); updateHeaderDate(); renderRoster(); }
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+  renderRoster();
+  renderSoldiers();
+  renderAbsences();
+  buildSkillsCheckboxes();
+}
+
+// ===== ROSTER =====
+function getRoster() {
+  const key = dateStr(currentDate);
+  if (!rosters[key]) {
+    rosters[key] = { shifts: {}, allday: {} };
+  }
+  return rosters[key];
+}
+
+function getAbsentSoldierIds(dateStr) {
+  return absences
+    .filter(a => a.from <= dateStr && a.to >= dateStr)
+    .map(a => a.soldierId);
+}
+
+function renderRoster() {
+  updateHeaderDate();
+  const roster = getRoster();
+  const dStr = dateStr(currentDate);
+  const absentIds = getAbsentSoldierIds(dStr);
+  const container = document.getElementById('roster-content');
+
+  let html = '';
+
+  // All-day positions
+  const alldayPositions = positions.filter(p => p.type === 'allday');
+  if (alldayPositions.length) {
+    html += `<div class="shift-block shift-allday" style="margin-bottom:16px">
+      <div class="shift-header">
+        <span>⭐ כל היום</span>
+      </div>
+      <div class="positions-grid">`;
+    alldayPositions.forEach(pos => {
+      const assigned = roster.allday[pos.id] || [];
+      html += renderPositionCell(pos, assigned, absentIds, 'allday', null);
+    });
+    html += `</div></div>`;
+  }
+
+  // Shift positions
+  const shiftPositions = positions.filter(p => p.type === 'shift');
+
+  if (shiftPositions.length) SHIFTS.forEach(shift => {
+    if (!roster.shifts[shift.id]) roster.shifts[shift.id] = {};
+    html += `<div class="shift-block shift-${shift.id}" style="margin-bottom:16px">
+      <div class="shift-header">
+        <span>${shift.label}</span>
+        <span class="shift-time">${shift.time}</span>
+      </div>
+      <div class="positions-grid">`;
+    shiftPositions.forEach(pos => {
+      const assigned = roster.shifts[shift.id][pos.id] || [];
+      html += renderPositionCell(pos, assigned, absentIds, 'shift', shift.id);
+    });
+    html += `</div></div>`;
+  });
+
+  // Add position button
+  if (isAdmin) {
+    html += `<button class="btn btn-ghost" onclick="openAddPosition()" style="margin-top:8px">+ הוסף עמדה / משימה</button>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function renderPositionCell(pos, assigned, absentIds, type, shiftId) {
+  let slots = '';
+  for (let i = 0; i < pos.count; i++) {
+    const sid = assigned[i];
+    const label = pos.slotLabels && pos.slotLabels[i] ? `<span style="font-size:10px;color:var(--accent);margin-left:4px;font-weight:600">${pos.slotLabels[i]}</span>` : '';
+    if (sid) {
+      const soldier = soldiers.find(s => s.id === sid);
+      const name = soldier ? soldier.name : '?';
+      const isAbsent = absentIds.includes(sid);
+      const conflict = isAbsent;
+      if (isAdmin) {
+        slots += `<div class="soldier-slot ${conflict ? 'slot-conflict' : ''}">
+          <span>${label}${name}${conflict ? ' ⚠' : ''}</span>
+          <button class="slot-remove" onclick="openSlotModal('${type}','${shiftId}','${pos.id}',${i})" title="שנה">✎</button>
+        </div>`;
+      } else {
+        slots += `<div class="soldier-slot ${conflict ? 'slot-conflict' : ''}">
+          <span>${label}${name}${conflict ? ' ⚠' : ''}</span>
+        </div>`;
+      }
+    } else {
+      if (isAdmin) {
+        slots += `<div class="soldier-slot slot-empty" onclick="openSlotModal('${type}','${shiftId}','${pos.id}',${i})" style="cursor:pointer">${label}+ הצב חייל</div>`;
+      } else {
+        slots += `<div class="soldier-slot slot-empty">${label}פנוי</div>`;
+      }
+    }
+  }
+
+  const skillBadges = pos.skills && pos.skills.length
+    ? `<span style="color:var(--accent);font-size:10px"> [${pos.skills.join(', ')}]</span>` : '';
+
+  return `<div class="position-cell">
+    <div class="position-name">
+      ${pos.name}${skillBadges}
+      <span class="position-capacity">${assigned.filter(Boolean).length}/${pos.count}</span>
+    </div>
+    ${slots}
+  </div>`;
+}
+
+// ===== SLOT MODAL =====
+function openSlotModal(type, shiftId, posId, slotIdx) {
+  editSlotCtx = { type, shiftId: shiftId === 'null' ? null : parseInt(shiftId), posId, slotIdx };
+  const pos = positions.find(p => p.id === posId);
+  const roster = getRoster();
+  const dStr = dateStr(currentDate);
+  const absentIds = getAbsentSoldierIds(dStr);
+
+  // Get all assigned in this date
+  const allAssigned = getAllAssignedToday();
+  const assigned = type === 'allday'
+    ? (roster.allday[posId] || [])
+    : (roster.shifts[editSlotCtx.shiftId][posId] || []);
+  const current = assigned[slotIdx];
+
+  // Available soldiers: not absent, has skills, not already in this shift+pos
+  const available = soldiers.filter(s => {
+    if (absentIds.includes(s.id)) return false;
+    if (pos.skills && pos.skills.length && !pos.skills.every(sk => s.skills.includes(sk))) return false;
+    return true;
+  });
+
+  document.getElementById('modal-slot-title').textContent = `${pos.name} — עמדה ${slotIdx + 1}`;
+  document.getElementById('modal-slot-body').innerHTML = `
+    <div class="form-group">
+      <label>בחר חייל</label>
+      <select id="slot-select">
+        <option value="">— פנוי —</option>
+        ${available.map(s => {
+          const inShift = type === 'shift' && allAssigned.shift[editSlotCtx.shiftId] && allAssigned.shift[editSlotCtx.shiftId].includes(s.id) && s.id !== current;
+          const inAllday = allAssigned.allday.includes(s.id) && s.id !== current;
+          const warn = inShift ? ' ⚠ כבר בשמרת' : (inAllday ? ' ⚠ במשימה יומית' : '');
+          return `<option value="${s.id}" ${s.id === current ? 'selected' : ''}>${s.name} (${s.rank})${warn}</option>`;
+        }).join('')}
+      </select>
+    </div>
+    ${current ? `<button class="btn btn-danger btn-sm" onclick="clearSlot()" style="margin-top:8px">הסר מעמדה</button>` : ''}
+  `;
+  document.getElementById('modal-slot').classList.add('open');
+}
+
+function getAllAssignedToday() {
+  const roster = getRoster();
+  const result = { shift: {}, allday: [] };
+  SHIFTS.forEach(sh => {
+    result.shift[sh.id] = [];
+    if (roster.shifts[sh.id]) {
+      positions.filter(p => p.type === 'shift').forEach(pos => {
+        (roster.shifts[sh.id][pos.id] || []).forEach(id => { if (id) result.shift[sh.id].push(id); });
+      });
+    }
+  });
+  positions.filter(p => p.type === 'allday').forEach(pos => {
+    (roster.allday[pos.id] || []).forEach(id => { if (id) result.allday.push(id); });
+  });
+  return result;
+}
+
+function clearSlot() {
+  const { type, shiftId, posId, slotIdx } = editSlotCtx;
+  const roster = getRoster();
+  if (type === 'allday') {
+    if (!roster.allday[posId]) roster.allday[posId] = [];
+    roster.allday[posId][slotIdx] = null;
+  } else {
+    if (!roster.shifts[shiftId][posId]) roster.shifts[shiftId][posId] = [];
+    roster.shifts[shiftId][posId][slotIdx] = null;
+  }
+  rosters[dateStr(currentDate)] = roster;
+  save('rosters', rosters);
+  closeModal('modal-slot');
+  renderRoster();
+}
+
+function confirmSlotChange() {
+  const { type, shiftId, posId, slotIdx } = editSlotCtx;
+  const val = document.getElementById('slot-select').value || null;
+  const roster = getRoster();
+  if (type === 'allday') {
+    if (!roster.allday[posId]) roster.allday[posId] = [];
+    roster.allday[posId][slotIdx] = val;
+  } else {
+    if (!roster.shifts[shiftId]) roster.shifts[shiftId] = {};
+    if (!roster.shifts[shiftId][posId]) roster.shifts[shiftId][posId] = [];
+    roster.shifts[shiftId][posId][slotIdx] = val;
+  }
+  rosters[dateStr(currentDate)] = roster;
+  save('rosters', rosters);
+  closeModal('modal-slot');
+  renderRoster();
+}
+
+// ===== AUTO SCHEDULE =====
+function autoSchedule() {
+  const dStr = dateStr(currentDate);
+  const absentIds = getAbsentSoldierIds(dStr);
+  const available = soldiers.filter(s => !absentIds.includes(s.id));
+
+  if (available.length === 0) {
+    alert('אין חיילים זמינים לתאריך זה!');
+    return;
+  }
+
+  // Count total shifts per soldier across all rosters for fairness
+  const shiftCount = {};
+  soldiers.forEach(s => { shiftCount[s.id] = 0; });
+  Object.values(rosters).forEach(r => {
+    SHIFTS.forEach(sh => {
+      if (r.shifts && r.shifts[sh.id]) {
+        positions.filter(p => p.type === 'shift').forEach(pos => {
+          (r.shifts[sh.id][pos.id] || []).forEach(id => { if (id && shiftCount[id] !== undefined) shiftCount[id]++; });
+        });
+      }
+    });
+    if (r.allday) {
+      positions.filter(p => p.type === 'allday').forEach(pos => {
+        (r.allday[pos.id] || []).forEach(id => { if (id && shiftCount[id] !== undefined) shiftCount[id]++; });
+      });
+    }
+  });
+
+  // Sort by shift count ascending (least loaded first)
+  const sorted = [...available].sort((a, b) => shiftCount[a.id] - shiftCount[b.id]);
+
+  const roster = { shifts: {}, allday: {} };
+  SHIFTS.forEach(sh => { roster.shifts[sh.id] = {}; });
+
+  let pool = [...sorted];
+  const usedToday = new Set();
+
+  // Assign all-day positions first
+  positions.filter(p => p.type === 'allday').forEach(pos => {
+    roster.allday[pos.id] = [];
+    const eligible = pool.filter(s =>
+      !usedToday.has(s.id) &&
+      (!pos.skills.length || pos.skills.every(sk => s.skills.includes(sk)))
+    );
+    for (let i = 0; i < pos.count && eligible.length; i++) {
+      const pick = eligible.shift();
+      roster.allday[pos.id].push(pick.id);
+      usedToday.add(pick.id);
+      pool = pool.filter(s => s.id !== pick.id); // remove from pool entirely (full day)
+    }
+  });
+
+  // Track last shift per soldier for gap constraint
+  const lastShift = {};
+  pool.forEach(s => { lastShift[s.id] = -2; }); // -2 means never assigned
+
+  SHIFTS.forEach((shift, shIdx) => {
+    positions.filter(p => p.type === 'shift').forEach(pos => {
+      roster.shifts[shift.id][pos.id] = [];
+      const eligible = pool.filter(s =>
+        (shIdx - lastShift[s.id]) >= 2 && // gap constraint: skip consecutive
+        (!pos.skills.length || pos.skills.every(sk => s.skills.includes(sk)))
+      ).sort((a,b) => shiftCount[a.id] - shiftCount[b.id]);
+
+      for (let i = 0; i < pos.count; i++) {
+        if (!eligible.length) break;
+        const pick = eligible.shift();
+        roster.shifts[shift.id][pos.id].push(pick.id);
+        lastShift[pick.id] = shIdx;
+        shiftCount[pick.id]++;
+        // Remove from further consideration in this shift
+        eligible.splice(eligible.indexOf(pick), 1);
+      }
+    });
+  });
+
+  rosters[dStr] = roster;
+  save('rosters', rosters);
+  renderRoster();
+}
+
+async function saveRoster() {
+  const btn = document.getElementById('btn-save-roster');
+  btn.textContent = '...שומר';
+  btn.disabled = true;
+  await fbSave('rosters', rosters);
+  btn.textContent = '✓ נשמר';
+  btn.style.background = 'var(--success)';
+  btn.disabled = false;
+  setTimeout(() => { btn.textContent = '💾 שמור'; btn.style.background = ''; }, 1500);
+}
+
+// ===== ADD POSITION =====
+function openAddPosition() {
+  buildSkillsCheckboxesFor('pos-skills-checkboxes');
+  document.getElementById('new-pos-name').value = '';
+  document.getElementById('new-pos-count').value = '1';
+  document.getElementById('modal-position').classList.add('open');
+}
+
+function addPosition() {
+  const name = document.getElementById('new-pos-name').value.trim();
+  if (!name) return;
+  const count = parseInt(document.getElementById('new-pos-count').value) || 1;
+  const type = document.getElementById('new-pos-type').value;
+  const reqSkills = Array.from(document.querySelectorAll('#pos-skills-checkboxes input:checked')).map(c => c.value);
+  positions.push({ id: 'p' + Date.now(), name, count, type, skills: reqSkills });
+  save('positions', positions);
+  closeModal('modal-position');
+  renderRoster();
+}
+
+// ===== SOLDIERS =====
+function buildSkillsCheckboxes() {
+  buildSkillsCheckboxesFor('skills-checkboxes');
+}
+
+function buildSkillsCheckboxesFor(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = skills.map(sk =>
+    `<label class="skill-check"><input type="checkbox" value="${sk}"> ${sk}</label>`
+  ).join('');
+}
+
+function showAddSoldier() {
+  buildSkillsCheckboxes();
+  document.getElementById('s-name').value = '';
+  document.getElementById('s-id').value = '';
+  document.getElementById('add-soldier-form').style.display = '';
+}
+
+function addSoldier() {
+  const name = document.getElementById('s-name').value.trim();
+  const id = document.getElementById('s-id').value.trim();
+  const rank = document.getElementById('s-rank').value;
+  if (!name || !id) return;
+  if (soldiers.find(s => s.id === id)) { alert('מספר אישי כבר קיים'); return; }
+  const soldierSkills = Array.from(document.querySelectorAll('#skills-checkboxes input:checked')).map(c => c.value);
+  soldiers.push({ id, name, rank, skills: soldierSkills });
+  save('soldiers', soldiers);
+  document.getElementById('add-soldier-form').style.display = 'none';
+  renderSoldiers();
+}
+
+function renderSoldiers() {
+  const query = document.getElementById('soldier-search')?.value.toLowerCase() || '';
+  const filtered = soldiers.filter(s =>
+    s.name.toLowerCase().includes(query) ||
+    s.id.includes(query) ||
+    s.rank.toLowerCase().includes(query)
+  );
+  const counts = getShiftCounts();
+  const tbody = document.getElementById('soldiers-tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="icon">👤</div><div>אין חיילים${query ? ' התואמים לחיפוש' : ''}</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(s => `
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td><span style="color:var(--text-muted)">${s.id}</span></td>
+      <td>${s.rank}</td>
+      <td>${(s.skills || []).map(sk => `<span class="tag tag-accent">${sk}</span>`).join('') || '<span style="color:var(--text-dim)">—</span>'}</td>
+      <td><span class="pill pill-yellow">${counts[s.id] || 0}</span></td>
+      <td style="display:${isAdmin ? '' : 'none'}">
+        <button class="btn btn-ghost btn-sm" onclick="openEditSoldier('${s.id}')">✎</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSoldier('${s.id}')">✕</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function getShiftCounts() {
+  const counts = {};
+  soldiers.forEach(s => { counts[s.id] = 0; });
+  Object.values(rosters).forEach(r => {
+    SHIFTS.forEach(sh => {
+      if (r.shifts && r.shifts[sh.id]) {
+        positions.filter(p => p.type === 'shift').forEach(pos => {
+          (r.shifts[sh.id][pos.id] || []).forEach(id => { if (id) counts[id] = (counts[id] || 0) + 1; });
+        });
+      }
+    });
+    if (r.allday) {
+      positions.filter(p => p.type === 'allday').forEach(pos => {
+        (r.allday[pos.id] || []).forEach(id => { if (id) counts[id] = (counts[id] || 0) + 1; });
+      });
+    }
+  });
+  return counts;
+}
+
+function deleteSoldier(id) {
+  if (!confirm('למחוק חייל זה?')) return;
+  soldiers = soldiers.filter(s => s.id !== id);
+  save('soldiers', soldiers);
+  renderSoldiers();
+}
+
+function openEditSoldier(id) {
+  const s = soldiers.find(s => s.id === id);
+  if (!s) return;
+  editSoldierCtx = id;
+  document.getElementById('modal-soldier-body').innerHTML = `
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="form-group">
+        <label>שם מלא</label>
+        <input type="text" id="edit-s-name" value="${s.name}">
+      </div>
+      <div class="form-group">
+        <label>דרגה</label>
+        <select id="edit-s-rank">
+          ${['טוראי','רב טוראי','סמל','רב סמל','רס"ל','סגן','סרן','רס"ן'].map(r =>
+            `<option ${r === s.rank ? 'selected' : ''}>${r}</option>`
+          ).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>כישורים</label>
+      <div class="skills-grid">
+        ${skills.map(sk => `
+          <label class="skill-check">
+            <input type="checkbox" value="${sk}" ${(s.skills||[]).includes(sk) ? 'checked' : ''}> ${sk}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-soldier').classList.add('open');
+}
+
+function saveEditSoldier() {
+  const s = soldiers.find(s => s.id === editSoldierCtx);
+  if (!s) return;
+  s.name = document.getElementById('edit-s-name').value.trim();
+  s.rank = document.getElementById('edit-s-rank').value;
+  s.skills = Array.from(document.querySelectorAll('#modal-soldier-body input:checked')).map(c => c.value);
+  save('soldiers', soldiers);
+  closeModal('modal-soldier');
+  renderSoldiers();
+}
+
+// ===== ABSENCES =====
+function showAddAbsence() {
+  const sel = document.getElementById('abs-soldier');
+  sel.innerHTML = soldiers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  const today = dateStr(new Date());
+  document.getElementById('abs-from').value = today;
+  document.getElementById('abs-to').value = today;
+  document.getElementById('abs-reason').value = '';
+  document.getElementById('add-absence-form').style.display = '';
+}
+
+function addAbsence() {
+  const soldierId = document.getElementById('abs-soldier').value;
+  const from = document.getElementById('abs-from').value;
+  const to = document.getElementById('abs-to').value;
+  const reason = document.getElementById('abs-reason').value.trim();
+  if (!soldierId || !from || !to) return;
+  if (to < from) { alert('תאריך סיום לפני תאריך התחלה'); return; }
+  absences.push({ id: Date.now(), soldierId, from, to, reason });
+  save('absences', absences);
+  document.getElementById('add-absence-form').style.display = 'none';
+  renderAbsences();
+}
+
+function renderAbsences() {
+  const query = document.getElementById('absence-search')?.value.toLowerCase() || '';
+  const wrap = document.getElementById('absence-list-wrap');
+  const filtered = absences.filter(a => {
+    const s = soldiers.find(s => s.id === a.soldierId);
+    const name = s ? s.name.toLowerCase() : '';
+    return name.includes(query) || (a.reason || '').toLowerCase().includes(query);
+  }).sort((a,b) => b.from.localeCompare(a.from));
+
+  if (!filtered.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="icon">📅</div><div>אין היעדרויות${query ? ' התואמות לחיפוש' : ''}</div></div>`;
+    return;
+  }
+  wrap.innerHTML = `<div class="absence-list">` + filtered.map(a => {
+    const s = soldiers.find(s => s.id === a.soldierId);
+    return `<div class="absence-item">
+      <div class="absence-soldier">${s ? s.name : '?'}</div>
+      <div class="absence-dates">📅 ${a.from} → ${a.to}</div>
+      <div class="absence-reason">${a.reason || ''}</div>
+      ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteAbsence(${a.id})">✕</button>` : ''}
+    </div>`;
+  }).join('') + `</div>`;
+}
+
+function deleteAbsence(id) {
+  absences = absences.filter(a => a.id !== id);
+  save('absences', absences);
+  renderAbsences();
+}
+
+// ===== LOAD =====
+function renderLoad() {
+  const counts = getShiftCounts();
+  const total = Object.values(counts).reduce((a,b) => a+b, 0);
+  const max = Math.max(...Object.values(counts), 1);
+  const avg = soldiers.length ? (total / soldiers.length).toFixed(1) : 0;
+
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${soldiers.length}</div><div class="stat-label">חיילים</div></div>
+    <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">סה"כ משמרות</div></div>
+    <div class="stat-card"><div class="stat-value">${avg}</div><div class="stat-label">ממוצע לחייל</div></div>
+    <div class="stat-card"><div class="stat-value">${Object.keys(rosters).length}</div><div class="stat-label">ימים מסודרים</div></div>
+  `;
+
+  const query = document.getElementById('load-search')?.value.toLowerCase() || '';
+  const filtered = soldiers
+    .filter(s => s.name.toLowerCase().includes(query))
+    .sort((a,b) => (counts[b.id]||0) - (counts[a.id]||0));
+
+  const tbody = document.getElementById('load-tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-state">אין נתונים</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = filtered.map(s => {
+    const c = counts[s.id] || 0;
+    const pct = Math.round((c / max) * 100);
+    const pill = c > avg * 1.3 ? 'pill-red' : (c < avg * 0.7 ? 'pill-green' : 'pill-yellow');
+    return `<tr>
+      <td><strong>${s.name}</strong></td>
+      <td style="color:var(--text-muted)">${s.rank}</td>
+      <td><span class="pill ${pill}">${c}</span></td>
+      <td style="min-width:140px">
+        <div class="load-bar-wrap">
+          <div class="load-bar"><div class="load-fill" style="width:${pct}%"></div></div>
+          <div class="load-text">${pct}%</div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ===== MODAL UTILS =====
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+
+// ===== EXCEL IMPORT =====
+let importData = null; // pending import
+
+function handleExcelDrop(e) {
+  e.preventDefault();
+  document.getElementById('import-dropzone').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) handleExcelFile(file);
+}
+
+function handleExcelFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
+      parseExcelWorkbook(wb, file.name);
+    } catch(err) {
+      showImportError('שגיאה בקריאת הקובץ: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function normalizeDate(val) {
+  if (!val) return null;
+  if (val instanceof Date) {
+    return val.toISOString().split('T')[0];
+  }
+  const s = String(val).trim();
+  // DD/MM/YYYY
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  // YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  return null;
+}
+
+function parseExcelWorkbook(wb, filename) {
+  // Find sheets (by name or by index)
+  const soldierSheet = wb.Sheets['חיילים'] || wb.Sheets[wb.SheetNames[0]];
+  const absenceSheet = wb.Sheets['היעדרויות'] || wb.Sheets[wb.SheetNames[1]];
+
+  const parsedSoldiers = [];
+  const parsedAbsences = [];
+  const errors = [];
+
+  // Parse soldiers
+  if (soldierSheet) {
+    const rows = XLSX.utils.sheet_to_json(soldierSheet, { defval: '' });
+    rows.forEach((row, i) => {
+      const id = String(row['מ"א'] || row['מא'] || row['id'] || '').trim();
+      const name = String(row['שם'] || row['name'] || '').trim();
+      const rank = String(row['דרגה'] || row['rank'] || 'טוראי').trim();
+      const skillsRaw = String(row['כישורים'] || row['skills'] || '').trim();
+      const soldierSkills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+      if (!id || !name) {
+        if (id || name) errors.push(`חיילים שורה ${i+2}: חסר מ"א או שם`);
+        return;
+      }
+      parsedSoldiers.push({ id, name, rank, skills: soldierSkills });
+    });
+  } else {
+    errors.push('לא נמצא שלט "חיילים"');
+  }
+
+  // Parse absences
+  if (absenceSheet) {
+    const rows = XLSX.utils.sheet_to_json(absenceSheet, { defval: '', cellDates: true });
+    rows.forEach((row, i) => {
+      const soldierId = String(row['מ"א'] || row['מא'] || row['id'] || '').trim();
+      const from = normalizeDate(row['מתאריך'] || row['from']);
+      const to = normalizeDate(row['עד תאריך'] || row['עד'] || row['to']);
+      const reason = String(row['סיבה'] || row['reason'] || '').trim();
+
+      if (!soldierId || !from || !to) {
+        if (soldierId || from || to) errors.push(`היעדרויות שורה ${i+2}: חסרים שדות`);
+        return;
+      }
+      parsedAbsences.push({ soldierId, from, to, reason });
+    });
+  }
+
+  // Compute diff for preview
+  const toAdd = [], toUpdate = [];
+  parsedSoldiers.forEach(ps => {
+    const existing = soldiers.find(s => s.id === ps.id);
+    if (!existing) toAdd.push(ps);
+    else if (existing.name !== ps.name || existing.rank !== ps.rank || JSON.stringify(existing.skills) !== JSON.stringify(ps.skills)) {
+      toUpdate.push({ old: existing, new: ps });
+    }
+  });
+
+  // Absence dedup: skip if exact same (soldierId+from+to) already exists
+  const newAbsences = parsedAbsences.filter(pa =>
+    !absences.find(a => a.soldierId === pa.soldierId && a.from === pa.from && a.to === pa.to)
+  );
+
+  importData = { parsedSoldiers, parsedAbsences, toAdd, toUpdate, newAbsences, errors };
+  showImportPreview(filename);
+}
+
+function showImportPreview(filename) {
+  const { toAdd, toUpdate, newAbsences, errors, parsedSoldiers } = importData;
+
+  document.getElementById('import-preview').style.display = '';
+  document.getElementById('import-result').style.display = 'none';
+
+  // Soldiers preview
+  let soldierHtml = '';
+  if (!toAdd.length && !toUpdate.length) {
+    soldierHtml = '<div style="color:var(--text-dim);font-size:12px">אין שינויים בחיילים</div>';
+  }
+  toAdd.forEach(s => {
+    soldierHtml += `<div class="absence-item" style="margin-bottom:6px">
+      <span class="pill pill-green" style="margin-left:8px">חדש</span>
+      <strong>${s.name}</strong> <span style="color:var(--text-muted);font-size:11px">${s.id} | ${s.rank}</span>
+    </div>`;
+  });
+  toUpdate.forEach(u => {
+    soldierHtml += `<div class="absence-item" style="margin-bottom:6px">
+      <span class="pill pill-yellow" style="margin-left:8px">עדכון</span>
+      <strong>${u.new.name}</strong> <span style="color:var(--text-muted);font-size:11px">${u.new.id}</span>
+      ${u.old.rank !== u.new.rank ? `<span style="font-size:11px;color:var(--text-dim)"> דרגה: ${u.old.rank}→${u.new.rank}</span>` : ''}
+    </div>`;
+  });
+  document.getElementById('preview-soldiers').innerHTML = soldierHtml;
+
+  // Absences preview
+  let absHtml = '';
+  if (!newAbsences.length) {
+    absHtml = '<div style="color:var(--text-dim);font-size:12px">אין היעדרויות חדשות</div>';
+  }
+  newAbsences.forEach(a => {
+    const s = parsedSoldiers.find(ps => ps.id === a.soldierId) || soldiers.find(s => s.id === a.soldierId);
+    absHtml += `<div class="absence-item" style="margin-bottom:6px">
+      <strong>${s ? s.name : a.soldierId}</strong>
+      <span style="color:var(--text-muted);font-size:11px"> ${a.from} → ${a.to}</span>
+      ${a.reason ? `<span style="color:var(--text-dim);font-size:11px"> ${a.reason}</span>` : ''}
+    </div>`;
+  });
+  document.getElementById('preview-absences').innerHTML = absHtml;
+
+  // Summary
+  let summary = `<strong>סיכום:</strong> ${toAdd.length} חיילים חדשים, ${toUpdate.length} עדכונים, ${newAbsences.length} היעדרויות חדשות`;
+  if (errors.length) summary += `<br><span style="color:var(--danger)">⚠ ${errors.length} שגיאות: ${errors.slice(0,3).join(' | ')}${errors.length>3?'...':''}</span>`;
+  document.getElementById('import-summary').innerHTML = summary;
+}
+
+function confirmImport() {
+  if (!importData) return;
+  const { parsedSoldiers, newAbsences, toAdd, toUpdate } = importData;
+
+  // Merge soldiers
+  parsedSoldiers.forEach(ps => {
+    const idx = soldiers.findIndex(s => s.id === ps.id);
+    if (idx === -1) soldiers.push(ps);
+    else soldiers[idx] = { ...soldiers[idx], ...ps };
+  });
+
+  // Add new skills that appear in import
+  parsedSoldiers.forEach(ps => {
+    ps.skills.forEach(sk => { if (!skills.includes(sk)) skills.push(sk); });
+  });
+
+  // Merge absences (dedup already done in preview)
+  newAbsences.forEach(a => {
+    absences.push({ id: Date.now() + Math.random(), ...a });
+  });
+
+  save('soldiers', soldiers);
+  save('absences', absences);
+  save('skills', skills);
+
+  importData = null;
+  document.getElementById('import-preview').style.display = 'none';
+  document.getElementById('excel-file-input').value = '';
+
+  const resultEl = document.getElementById('import-result');
+  resultEl.style.display = '';
+  resultEl.innerHTML = `<div class="alert" style="background:rgba(63,185,80,0.1);border:1px solid var(--success);color:var(--success)">
+    ✅ הייבוא הושלם בהצלחה! ${toAdd.length} חיילים נוספו, ${toUpdate.length} עודכנו, ${newAbsences.length} היעדרויות נוספו.
+  </div>`;
+
+  renderSoldiers();
+  renderAbsences();
+  buildSkillsCheckboxes();
+}
+
+function cancelImport() {
+  importData = null;
+  document.getElementById('import-preview').style.display = 'none';
+  document.getElementById('excel-file-input').value = '';
+}
+
+function showImportError(msg) {
+  const resultEl = document.getElementById('import-result');
+  resultEl.style.display = '';
+  resultEl.innerHTML = `<div class="alert alert-danger">❌ ${msg}</div>`;
+}
+
+// ===== DOWNLOAD TEMPLATE =====
+function downloadTemplate() {
+  const wb = XLSX.utils.book_new();
+
+  const soldiersData = [
+    ['מ"א', 'שם', 'דרגה', 'כישורים'],
+    ['1234567', 'ישראל ישראלי', 'סמל', 'נהג,חובש'],
+    ['7654321', 'משה כהן', 'טוראי', 'מפעיל קשר'],
+  ];
+  const ws1 = XLSX.utils.aoa_to_sheet(soldiersData);
+  ws1['!cols'] = [{wch:12},{wch:20},{wch:12},{wch:30}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'חיילים');
+
+  const absData = [
+    ['מ"א', 'מתאריך', 'עד תאריך', 'סיבה'],
+    ['1234567', '2026-07-01', '2026-07-05', 'חופשה'],
+    ['7654321', '2026-07-10', '2026-07-10', 'מחלה'],
+  ];
+  const ws2 = XLSX.utils.aoa_to_sheet(absData);
+  ws2['!cols'] = [{wch:12},{wch:14},{wch:14},{wch:20}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'היעדרויות');
+
+  XLSX.writeFile(wb, 'תבנית_שבצק_טייגר.xlsx');
+}
+
+// ===== INIT =====
+updateHeaderDate();
+
+// Disable login until Firebase is ready
+document.querySelector('#login-screen .btn-primary').disabled = true;
+document.querySelector('#login-screen .btn-ghost').disabled = true;
+window.addEventListener('fbReady', () => {
+  document.querySelector('#login-screen .btn-primary').disabled = false;
+  document.querySelector('#login-screen .btn-ghost').disabled = false;
+});
+</script>
+</body>
+</html>
