@@ -867,6 +867,10 @@
       </div>
     </div>
     <div class="form-group" style="margin-top:12px">
+      <label>תאריך סיום (אופציונלי — אם ריק, העמדה קבועה)</label>
+      <input type="date" id="new-pos-expiry">
+    </div>
+    <div class="form-group" style="margin-top:12px">
       <label>תוויות תפקידים (אופציונלי — מפקד, נהג, חובש...)</label>
       <input type="text" id="new-pos-labels" placeholder="לדוגמא: מפקד,נהג,חובש">
       <div style="font-size:11px;color:var(--text-dim);margin-top:4px">מופרד בפסיקים, לפי סדר השורות</div>
@@ -1116,10 +1120,13 @@ function renderRoster() {
   const absentIds = getAbsentSoldierIds(dStr);
   const container = document.getElementById('roster-content');
 
+  // Filter out expired positions for current date
+  const activePositions = positions.filter(p => !p.expiry || p.expiry >= dStr);
+
   let html = '';
 
   // All-day positions
-  const alldayPositions = positions.filter(p => p.type === 'allday');
+  const alldayPositions = activePositions.filter(p => p.type === 'allday');
   if (alldayPositions.length) {
     html += `<div class="shift-block shift-allday" style="margin-bottom:16px">
       <div class="shift-header">
@@ -1134,7 +1141,7 @@ function renderRoster() {
   }
 
   // Shift positions
-  const shiftPositions = positions.filter(p => p.type === 'shift');
+  const shiftPositions = activePositions.filter(p => p.type === 'shift');
 
   if (shiftPositions.length) SHIFTS.forEach(shift => {
     if (!roster.shifts[shift.id]) roster.shifts[shift.id] = {};
@@ -1152,7 +1159,7 @@ function renderRoster() {
   });
 
   // Timed positions
-  const timedPositions = positions.filter(p => p.type === 'timed');
+  const timedPositions = activePositions.filter(p => p.type === 'timed');
   if (timedPositions.length) {
     timedPositions.forEach(pos => {
       const label = `${String(pos.startHour).padStart(2,'0')}:00–${String(pos.endHour).padStart(2,'0')}:00`;
@@ -1460,6 +1467,7 @@ function openAddPosition() {
   document.getElementById('new-pos-name').value = '';
   document.getElementById('new-pos-count').value = '1';
   document.getElementById('new-pos-labels').value = '';
+  document.getElementById('new-pos-expiry').value = '';
   document.getElementById('new-pos-type').value = 'shift';
   document.getElementById('timed-fields').style.display = 'none';
   document.getElementById('modal-position').classList.add('open');
@@ -1478,7 +1486,9 @@ function addPosition() {
   const reqSkills = Array.from(document.querySelectorAll('#pos-skills-checkboxes input:checked')).map(c => c.value);
   const labelsRaw = document.getElementById('new-pos-labels').value.trim();
   const slotLabels = labelsRaw ? labelsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const expiry = document.getElementById('new-pos-expiry').value || null;
   const pos = { id: 'p' + Date.now(), name, count, type, skills: reqSkills, slotLabels };
+  if (expiry) pos.expiry = expiry;
   if (type === 'timed') {
     pos.startHour = parseInt(document.getElementById('new-pos-start').value);
     pos.endHour = parseInt(document.getElementById('new-pos-end').value);
