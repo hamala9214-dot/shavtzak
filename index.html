@@ -871,12 +871,12 @@
       <input type="date" id="new-pos-expiry">
     </div>
     <div class="form-group" style="margin-top:12px">
-      <label>תוויות תפקידים (אופציונלי — מפקד, נהג, חובש...)</label>
-      <input type="text" id="new-pos-labels" placeholder="לדוגמא: מפקד,נהג,חובש">
+      <label>תוויות שורות (אופציונלי — מפקד, נהג, חובש...)</label>
+      <input type="text" id="new-pos-labels" placeholder="לדוגמא: מפקד,נהג">
       <div style="font-size:11px;color:var(--text-dim);margin-top:4px">מופרד בפסיקים, לפי סדר השורות</div>
     </div>
     <div class="form-group" style="margin-top:12px">
-      <label>כישורים נדרשים (אופציונלי)</label>
+      <label>כישורים נדרשים לכל החיילים בעמדה (אופציונלי)</label>
       <div class="skills-grid" id="pos-skills-checkboxes"></div>
     </div>
     <div class="modal-actions">
@@ -1243,15 +1243,15 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
     : (roster.shifts[editSlotCtx.shiftId][posId] || []);
   const current = assigned[slotIdx];
 
-  // Get slot-specific required skill from label
+  // Get slot-specific label and enforce as skill requirement
   const slotLabel = pos.slotLabels && pos.slotLabels[slotIdx] ? pos.slotLabels[slotIdx] : null;
   const slotSkillRequired = slotLabel && skills.includes(slotLabel) ? slotLabel : null;
 
-  // Available soldiers: not absent, has position skills, has slot-specific skill if required
+  // Available soldiers: not absent, has position-level skills, has slot-level skill if required
   const available = soldiers.filter(s => {
     if (absentIds.includes(s.id)) return false;
-    if (pos.skills && pos.skills.length && !pos.skills.every(sk => s.skills.includes(sk))) return false;
-    if (slotSkillRequired && s.id !== current && !(s.skills || []).includes(slotSkillRequired)) return false;
+    if (pos.skills && pos.skills.length && !pos.skills.every(sk => (s.skills||[]).includes(sk))) return false;
+    if (slotSkillRequired && s.id !== current && !(s.skills||[]).includes(slotSkillRequired)) return false;
     return true;
   });
 
