@@ -1195,7 +1195,11 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
         ${available.map(s => {
           const inShift = type === 'shift' && allAssigned.shift[editSlotCtx.shiftId] && allAssigned.shift[editSlotCtx.shiftId].includes(s.id) && s.id !== current;
           const inAllday = allAssigned.allday.includes(s.id) && s.id !== current;
-          const warn = inShift ? ' ⚠ כבר בשמרת' : (inAllday ? ' ⚠ במשימה יומית' : '');
+          const locations = (allAssigned.locationOf[s.id] || []).filter(l => {
+            // exclude current slot's own position from warning
+            return s.id !== current;
+          });
+          const warn = (inShift || inAllday) && locations.length ? ` ⚠ משובץ ב: ${locations.join(', ')}` : '';
           return `<option value="${s.id}" ${s.id === current ? 'selected' : ''}>${s.name} (${s.rank})${warn}</option>`;
         }).join('')}
       </select>
@@ -1207,17 +1211,29 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
 
 function getAllAssignedToday() {
   const roster = getRoster();
-  const result = { shift: {}, allday: [] };
+  const result = { shift: {}, allday: [], locationOf: {} }; // locationOf: soldierID -> description
   SHIFTS.forEach(sh => {
     result.shift[sh.id] = [];
     if (roster.shifts[sh.id]) {
       positions.filter(p => p.type === 'shift').forEach(pos => {
-        (roster.shifts[sh.id][pos.id] || []).forEach(id => { if (id) result.shift[sh.id].push(id); });
+        (roster.shifts[sh.id][pos.id] || []).forEach(id => {
+          if (id) {
+            result.shift[sh.id].push(id);
+            if (!result.locationOf[id]) result.locationOf[id] = [];
+            result.locationOf[id].push(`${pos.name} (${SHIFTS.find(s=>s.id===sh.id).label})`);
+          }
+        });
       });
     }
   });
   positions.filter(p => p.type === 'allday').forEach(pos => {
-    (roster.allday[pos.id] || []).forEach(id => { if (id) result.allday.push(id); });
+    (roster.allday[pos.id] || []).forEach(id => {
+      if (id) {
+        result.allday.push(id);
+        if (!result.locationOf[id]) result.locationOf[id] = [];
+        result.locationOf[id].push(`${pos.name} (כל היום)`);
+      }
+    });
   });
   return result;
 }
