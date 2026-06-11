@@ -841,16 +841,35 @@
         <div class="form-group">
           <label>משעה</label>
           <select id="new-pos-start">
-            ${Array.from({length:24},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')}:00</option>`).join('')}
+            <option value="0">00:00</option><option value="1">01:00</option><option value="2">02:00</option>
+            <option value="3">03:00</option><option value="4">04:00</option><option value="5">05:00</option>
+            <option value="6">06:00</option><option value="7">07:00</option><option value="8">08:00</option>
+            <option value="9">09:00</option><option value="10">10:00</option><option value="11">11:00</option>
+            <option value="12">12:00</option><option value="13">13:00</option><option value="14">14:00</option>
+            <option value="15">15:00</option><option value="16">16:00</option><option value="17">17:00</option>
+            <option value="18">18:00</option><option value="19">19:00</option><option value="20">20:00</option>
+            <option value="21">21:00</option><option value="22">22:00</option><option value="23">23:00</option>
           </select>
         </div>
         <div class="form-group">
           <label>עד שעה</label>
           <select id="new-pos-end">
-            ${Array.from({length:24},(_,i)=>`<option value="${i+1}" ${i===7?'selected':''}>${String(i+1).padStart(2,'0')}:00</option>`).join('')}
+            <option value="1">01:00</option><option value="2">02:00</option><option value="3">03:00</option>
+            <option value="4">04:00</option><option value="5">05:00</option><option value="6">06:00</option>
+            <option value="7">07:00</option><option value="8" selected>08:00</option><option value="9">09:00</option>
+            <option value="10">10:00</option><option value="11">11:00</option><option value="12">12:00</option>
+            <option value="13">13:00</option><option value="14">14:00</option><option value="15">15:00</option>
+            <option value="16">16:00</option><option value="17">17:00</option><option value="18">18:00</option>
+            <option value="19">19:00</option><option value="20">20:00</option><option value="21">21:00</option>
+            <option value="22">22:00</option><option value="23">23:00</option><option value="24">00:00 (חצות)</option>
           </select>
         </div>
       </div>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label>תוויות תפקידים (אופציונלי — מפקד, נהג, חובש...)</label>
+      <input type="text" id="new-pos-labels" placeholder="לדוגמא: מפקד,נהג,חובש">
+      <div style="font-size:11px;color:var(--text-dim);margin-top:4px">מופרד בפסיקים, לפי סדר השורות</div>
     </div>
     <div class="form-group" style="margin-top:12px">
       <label>כישורים נדרשים (אופציונלי)</label>
@@ -1141,7 +1160,10 @@ function renderRoster() {
       html += `<div class="shift-block" style="margin-bottom:16px;border-color:#2a3a50">
         <div class="shift-header" style="background:#1a2535">
           <span>🕐 ${pos.name}</span>
-          <span class="shift-time">${label}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="shift-time">${label}</span>
+            ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deletePosition('${pos.id}')" style="padding:2px 8px;font-size:11px">✕ מחק</button>` : ''}
+          </div>
         </div>
         <div class="positions-grid">
           ${renderPositionCell(pos, assigned, absentIds, 'allday', null)}
@@ -1180,9 +1202,9 @@ function renderPositionCell(pos, assigned, absentIds, type, shiftId) {
       }
     } else {
       if (isAdmin) {
-        slots += `<div class="soldier-slot slot-empty" onclick="openSlotModal('${type}','${shiftId}','${pos.id}',${i})" style="cursor:pointer">${label}+ הצב חייל</div>`;
+        slots += `<div class="soldier-slot slot-empty" onclick="openSlotModal('${type}','${shiftId}','${pos.id}',${i})" style="cursor:pointer">${label ? label + ' ' : ''}+ הצב חייל</div>`;
       } else {
-        slots += `<div class="soldier-slot slot-empty">${label}פנוי</div>`;
+        slots += `<div class="soldier-slot slot-empty">${label ? label + ' ' : ''}פנוי</div>`;
       }
     }
   }
@@ -1214,14 +1236,20 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
     : (roster.shifts[editSlotCtx.shiftId][posId] || []);
   const current = assigned[slotIdx];
 
-  // Available soldiers: not absent, has skills, not already in this shift+pos
+  // Get slot-specific required skill from label
+  const slotLabel = pos.slotLabels && pos.slotLabels[slotIdx] ? pos.slotLabels[slotIdx] : null;
+  const slotSkillRequired = slotLabel && skills.includes(slotLabel) ? slotLabel : null;
+
+  // Available soldiers: not absent, has position skills, has slot-specific skill if required
   const available = soldiers.filter(s => {
     if (absentIds.includes(s.id)) return false;
     if (pos.skills && pos.skills.length && !pos.skills.every(sk => s.skills.includes(sk))) return false;
+    if (slotSkillRequired && s.id !== current && !(s.skills || []).includes(slotSkillRequired)) return false;
     return true;
   });
 
-  document.getElementById('modal-slot-title').textContent = `${pos.name} — עמדה ${slotIdx + 1}`;
+  const slotTitleSuffix = slotLabel ? ` — ${slotLabel}` : ` — עמדה ${slotIdx + 1}`;
+  document.getElementById('modal-slot-title').textContent = `${pos.name}${slotTitleSuffix}`;
   document.getElementById('modal-slot-body').innerHTML = `
     <div class="form-group">
       <label>בחר חייל</label>
@@ -1431,6 +1459,7 @@ function openAddPosition() {
   buildSkillsCheckboxesFor('pos-skills-checkboxes');
   document.getElementById('new-pos-name').value = '';
   document.getElementById('new-pos-count').value = '1';
+  document.getElementById('new-pos-labels').value = '';
   document.getElementById('new-pos-type').value = 'shift';
   document.getElementById('timed-fields').style.display = 'none';
   document.getElementById('modal-position').classList.add('open');
@@ -1447,7 +1476,9 @@ function addPosition() {
   const count = parseInt(document.getElementById('new-pos-count').value) || 1;
   const type = document.getElementById('new-pos-type').value;
   const reqSkills = Array.from(document.querySelectorAll('#pos-skills-checkboxes input:checked')).map(c => c.value);
-  const pos = { id: 'p' + Date.now(), name, count, type, skills: reqSkills };
+  const labelsRaw = document.getElementById('new-pos-labels').value.trim();
+  const slotLabels = labelsRaw ? labelsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+  const pos = { id: 'p' + Date.now(), name, count, type, skills: reqSkills, slotLabels };
   if (type === 'timed') {
     pos.startHour = parseInt(document.getElementById('new-pos-start').value);
     pos.endHour = parseInt(document.getElementById('new-pos-end').value);
@@ -1459,7 +1490,16 @@ function addPosition() {
   renderRoster();
 }
 
-// ===== SOLDIERS =====
+function deletePosition(id) {
+  const pos = positions.find(p => p.id === id);
+  if (!pos) return;
+  if (!confirm(`למחוק את העמדה "${pos.name}"?`)) return;
+  positions = positions.filter(p => p.id !== id);
+  save('positions', positions);
+  renderRoster();
+}
+
+
 function buildSkillsCheckboxes() {
   buildSkillsCheckboxesFor('skills-checkboxes');
 }
