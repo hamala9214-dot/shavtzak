@@ -829,10 +829,27 @@
       </div>
       <div class="form-group">
         <label>סוג</label>
-        <select id="new-pos-type">
+        <select id="new-pos-type" onchange="toggleTimedFields()">
           <option value="shift">משמרת רגילה</option>
           <option value="allday">כל היום</option>
+          <option value="timed">שעות ספציפיות</option>
         </select>
+      </div>
+    </div>
+    <div id="timed-fields" style="display:none;margin-top:12px">
+      <div class="form-row">
+        <div class="form-group">
+          <label>משעה</label>
+          <select id="new-pos-start">
+            ${Array.from({length:24},(_,i)=>`<option value="${i}">${String(i).padStart(2,'0')}:00</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>עד שעה</label>
+          <select id="new-pos-end">
+            ${Array.from({length:24},(_,i)=>`<option value="${i+1}" ${i===7?'selected':''}>${String(i+1).padStart(2,'0')}:00</option>`).join('')}
+          </select>
+        </div>
       </div>
     </div>
     <div class="form-group" style="margin-top:12px">
@@ -1115,6 +1132,24 @@ function renderRoster() {
     html += `</div></div>`;
   });
 
+  // Timed positions
+  const timedPositions = positions.filter(p => p.type === 'timed');
+  if (timedPositions.length) {
+    timedPositions.forEach(pos => {
+      const label = `${String(pos.startHour).padStart(2,'0')}:00–${String(pos.endHour).padStart(2,'0')}:00`;
+      const assigned = roster.allday[pos.id] || [];
+      html += `<div class="shift-block" style="margin-bottom:16px;border-color:#2a3a50">
+        <div class="shift-header" style="background:#1a2535">
+          <span>🕐 ${pos.name}</span>
+          <span class="shift-time">${label}</span>
+        </div>
+        <div class="positions-grid">
+          ${renderPositionCell(pos, assigned, absentIds, 'allday', null)}
+        </div>
+      </div>`;
+    });
+  }
+
   // Add position button
   if (isAdmin) {
     html += `<button class="btn btn-ghost" onclick="openAddPosition()" style="margin-top:8px">+ הוסף עמדה / משימה</button>`;
@@ -1193,20 +1228,28 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
       <select id="slot-select">
         <option value="">— פנוי —</option>
         ${available.map(s => {
-          const inShift = type === 'shift' && allAssigned.shift[editSlotCtx.shiftId] && allAssigned.shift[editSlotCtx.shiftId].includes(s.id) && s.id !== current;
-          const inAllday = allAssigned.allday.includes(s.id) && s.id !== current;
-          const locations = (allAssigned.locationOf[s.id] || []).filter(l => {
-            // exclude current slot's own position from warning
-            return s.id !== current;
-          });
-          const warn = (inShift || inAllday) && locations.length ? ` ⚠ משובץ ב: ${locations.join(', ')}` : '';
-          return `<option value="${s.id}" ${s.id === current ? 'selected' : ''}>${s.name} (${s.rank})${warn}</option>`;
+          if (s.id === current) return `<option value="${s.id}" selected>${s.name} (${s.rank})</option>`;
+          const locations = (allAssigned.locationOf[s.id] || []);
+          // For shift slots: check direct conflict in this shift OR timed overlap already injected
+          const conflictInThisShift = type === 'shift' && allAssigned.shift[editSlotCtx.shiftId] && allAssigned.shift[editSlotCtx.shiftId].includes(s.id);
+          // For allday/timed slots: check if already in allday list
+          const conflictAllday = (type === 'allday') && allAssigned.allday.includes(s.id);
+          const hasConflict = conflictInThisShift || conflictAllday;
+          const warn = hasConflict && locations.length ? ` ⚠ משובץ ב: ${locations.join(', ')}` : '';
+          return `<option value="${s.id}">${s.name} (${s.rank})${warn}</option>`;
         }).join('')}
       </select>
     </div>
     ${current ? `<button class="btn btn-danger btn-sm" onclick="clearSlot()" style="margin-top:8px">הסר מעמדה</button>` : ''}
   `;
   document.getElementById('modal-slot').classList.add('open');
+}
+
+// Returns true if a timed position [startHour,endHour) overlaps with a shift [shiftStart,shiftEnd)
+function shiftsOverlap(startHour, endHour, shiftId) {
+  const shiftRanges = { 0: [0,8], 1: [8,16], 2: [16,24] };
+  const [ss, se] = shiftRanges[shiftId] || [0,0];
+  return startHour < se && endHour > ss;
 }
 
 function getAllAssignedToday() {
@@ -1232,6 +1275,24 @@ function getAllAssignedToday() {
         result.allday.push(id);
         if (!result.locationOf[id]) result.locationOf[id] = [];
         result.locationOf[id].push(`${pos.name} (כל היום)`);
+      }
+    });
+  });
+  // timed positions stored in allday bucket
+  positions.filter(p => p.type === 'timed').forEach(pos => {
+    (roster.allday[pos.id] || []).forEach(id => {
+      if (id) {
+        result.allday.push(id);
+        if (!result.locationOf[id]) result.locationOf[id] = [];
+        const label = `${String(pos.startHour).padStart(2,'0')}:00–${String(pos.endHour).padStart(2,'0')}:00`;
+        result.locationOf[id].push(`${pos.name} (${label})`);
+        // also mark as conflicting with overlapping shifts
+        SHIFTS.forEach(sh => {
+          if (shiftsOverlap(pos.startHour, pos.endHour, sh.id)) {
+            if (!result.shift[sh.id]) result.shift[sh.id] = [];
+            if (!result.shift[sh.id].includes(id)) result.shift[sh.id].push(id);
+          }
+        });
       }
     });
   });
@@ -1370,7 +1431,14 @@ function openAddPosition() {
   buildSkillsCheckboxesFor('pos-skills-checkboxes');
   document.getElementById('new-pos-name').value = '';
   document.getElementById('new-pos-count').value = '1';
+  document.getElementById('new-pos-type').value = 'shift';
+  document.getElementById('timed-fields').style.display = 'none';
   document.getElementById('modal-position').classList.add('open');
+}
+
+function toggleTimedFields() {
+  const type = document.getElementById('new-pos-type').value;
+  document.getElementById('timed-fields').style.display = type === 'timed' ? '' : 'none';
 }
 
 function addPosition() {
@@ -1379,7 +1447,13 @@ function addPosition() {
   const count = parseInt(document.getElementById('new-pos-count').value) || 1;
   const type = document.getElementById('new-pos-type').value;
   const reqSkills = Array.from(document.querySelectorAll('#pos-skills-checkboxes input:checked')).map(c => c.value);
-  positions.push({ id: 'p' + Date.now(), name, count, type, skills: reqSkills });
+  const pos = { id: 'p' + Date.now(), name, count, type, skills: reqSkills };
+  if (type === 'timed') {
+    pos.startHour = parseInt(document.getElementById('new-pos-start').value);
+    pos.endHour = parseInt(document.getElementById('new-pos-end').value);
+    if (pos.endHour <= pos.startHour) { alert('שעת סיום חייבת להיות אחרי שעת התחלה'); return; }
+  }
+  positions.push(pos);
   save('positions', positions);
   closeModal('modal-position');
   renderRoster();
