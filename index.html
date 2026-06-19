@@ -6,29 +6,43 @@
 <title>שבצק פלוגה א׳ — טייגר</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@500;700&display=swap');
 
   :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface2: #1e2530;
-    --border: #2a3340;
-    --accent: #e8a020;
+    --bg: #0c0a07;
+    --surface: #13100a;
+    --surface2: #1a140d;
+    --border: #2a2114;
+    --accent: #f0a829;
     --accent2: #c47a10;
-    --text: #e6edf3;
-    --text-muted: #7d8fa0;
-    --text-dim: #4a5568;
+    --text: #f3ead6;
+    --text-muted: #9a8c6e;
+    --text-dim: #5a4f3a;
     --danger: #e05252;
     --success: #3fb950;
-    --shift1: #1a3a4a;
-    --shift2: #1a2e1a;
-    --shift3: #2e1a2e;
+    --shift1: #16242e;
+    --shift2: #16261a;
+    --shift3: #261626;
     --radius: 8px;
     --radius-sm: 4px;
     --font: 'Heebo', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ===== TIGER MARK + LOADER ===== */
+  @keyframes tgDraw { 0%{stroke-dashoffset:240} 55%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
+  @keyframes tgFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+  @keyframes tgGlow { 0%,100%{opacity:.4} 50%{opacity:1} }
+  @keyframes tgBlink { 0%,90%,100%{transform:scaleY(1)} 95%{transform:scaleY(.1)} }
+  @keyframes tgDots { 0%,20%{opacity:.15} 50%{opacity:1} 100%{opacity:.15} }
+
+  .tiger-mark { display:block; stroke: var(--accent); fill:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
+  .tiger-mark .tg-eye { fill: var(--accent); stroke:none; transform-box:fill-box; transform-origin:center; animation: tgBlink 4.4s ease-in-out infinite; }
+  .tiger-loader { display:block; width:128px; margin:0 auto; stroke: var(--accent); fill:none; stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; animation: tgFloat 4s ease-in-out infinite; overflow:visible; }
+  .tiger-loader .tg-path { stroke-dasharray:240; animation: tgDraw 5s ease-in-out infinite; }
+  .tiger-loader .tg-glow { fill: var(--accent); stroke:none; animation: tgGlow 3s ease-in-out infinite; }
 
   body {
     font-family: var(--font);
@@ -42,6 +56,7 @@
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
     padding: 0 24px;
     height: 56px;
     display: flex;
@@ -232,10 +247,11 @@
     gap: 8px;
   }
   .date-display {
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 15px;
     min-width: 120px;
     text-align: center;
+    font-family: var(--mono);
   }
 
   .roster-grid {
@@ -263,7 +279,7 @@
   .shift-2 .shift-header { background: var(--shift3); border-color: #401e40; }
   .shift-allday .shift-header { background: rgba(232,160,32,0.1); border-color: rgba(232,160,32,0.3); }
 
-  .shift-time { color: var(--text-muted); font-size: 11px; font-weight: 400; }
+  .shift-time { color: var(--text-muted); font-size: 11px; font-weight: 500; font-family: var(--mono); letter-spacing: 0.5px; }
 
   .positions-grid {
     display: grid;
@@ -289,10 +305,11 @@
   }
   .position-capacity {
     font-size: 10px;
-    color: var(--text-dim);
-    font-weight: 400;
+    color: var(--accent);
+    font-weight: 600;
     text-transform: none;
     letter-spacing: 0;
+    font-family: var(--mono);
   }
 
   .soldier-slot {
@@ -343,7 +360,7 @@
     padding: 14px;
     text-align: center;
   }
-  .stat-value { font-size: 24px; font-weight: 900; color: var(--accent); }
+  .stat-value { font-size: 24px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
   .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
   /* ===== ABSENCE CALENDAR ===== */
@@ -535,7 +552,19 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">⚔ שבצק</div>
+    <div class="login-logo">
+      <svg class="tiger-mark" width="62" height="62" viewBox="0 0 64 64" style="margin:0 auto 10px" aria-hidden="true">
+        <path d="M20,22 L15,7 L29,17"/><path d="M44,22 L49,7 L35,17"/>
+        <path d="M14,30 Q13,49 32,57 Q51,49 50,30 Q48,16 32,16 Q16,16 14,30 Z"/>
+        <path d="M32,16 L32,9"/><path d="M27,17 L25,10"/><path d="M37,17 L39,10"/>
+        <path d="M20,30 Q25,26 30,30 Q25,33 20,30 Z"/><path d="M34,30 Q39,26 44,30 Q39,33 34,30 Z"/>
+        <ellipse class="tg-eye" cx="25" cy="30" rx="1.6" ry="2.4"/><ellipse class="tg-eye" cx="39" cy="30" rx="1.6" ry="2.4"/>
+        <path d="M28,39 L36,39 L32,44 Z"/><path d="M32,44 L32,48"/>
+        <path d="M18,34 Q12,36 9,40"/><path d="M46,34 Q52,36 55,40"/>
+        <path d="M22,43 L7,39"/><path d="M22,46 L8,51"/><path d="M42,43 L57,39"/><path d="M42,46 L56,51"/>
+      </svg>
+      <div>שבצק</div>
+    </div>
     <div class="login-sub">פלוגה א׳ — טייגר</div>
     <input type="password" id="login-pass" placeholder="סיסמת מנהל" />
     <button class="btn btn-primary" style="width:100%" onclick="tryLogin()">כניסת מנהל</button>
@@ -551,7 +580,17 @@
 
 <header>
   <div class="logo">
-    <span>⚔ שבצק פלוגה א׳</span>
+    <svg class="tiger-mark" width="30" height="30" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M20,22 L15,7 L29,17"/><path d="M44,22 L49,7 L35,17"/>
+      <path d="M14,30 Q13,49 32,57 Q51,49 50,30 Q48,16 32,16 Q16,16 14,30 Z"/>
+      <path d="M32,16 L32,9"/><path d="M27,17 L25,10"/><path d="M37,17 L39,10"/>
+      <path d="M20,30 Q25,26 30,30 Q25,33 20,30 Z"/><path d="M34,30 Q39,26 44,30 Q39,33 34,30 Z"/>
+      <ellipse class="tg-eye" cx="25" cy="30" rx="1.6" ry="2.4"/><ellipse class="tg-eye" cx="39" cy="30" rx="1.6" ry="2.4"/>
+      <path d="M28,39 L36,39 L32,44 Z"/><path d="M32,44 L32,48"/>
+      <path d="M18,34 Q12,36 9,40"/><path d="M46,34 Q52,36 55,40"/>
+      <path d="M22,43 L7,39"/><path d="M22,46 L8,51"/><path d="M42,43 L57,39"/><path d="M42,46 L56,51"/>
+    </svg>
+    <span>שבצק פלוגה א׳</span>
     <span style="color:var(--text-muted);font-size:13px;font-weight:400">טייגר</span>
     <span class="logo-badge" id="mode-badge">מנהל</span>
   </div>
@@ -1006,7 +1045,22 @@ async function launchApp() {
   document.getElementById('app').style.display = 'block';
 
   // Show loading state
-  document.getElementById('roster-content').innerHTML = '<div class="empty-state"><div class="icon">⏳</div><div>טוען נתונים...</div></div>';
+  document.getElementById('roster-content').innerHTML = `<div style="text-align:center;padding:52px 20px">
+    <svg class="tiger-loader" viewBox="0 0 64 64" aria-hidden="true">
+      <circle class="tg-glow" cx="25" cy="30" r="4.5" style="filter:blur(3px)"></circle>
+      <circle class="tg-glow" cx="39" cy="30" r="4.5" style="filter:blur(3px)"></circle>
+      <path class="tg-path" d="M20,22 L15,7 L29,17"></path><path class="tg-path" d="M44,22 L49,7 L35,17"></path>
+      <path class="tg-path" d="M14,30 Q13,49 32,57 Q51,49 50,30 Q48,16 32,16 Q16,16 14,30 Z"></path>
+      <path class="tg-path" d="M32,16 L32,9"></path><path class="tg-path" d="M27,17 L25,10"></path><path class="tg-path" d="M37,17 L39,10"></path>
+      <path class="tg-path" d="M20,30 Q25,26 30,30 Q25,33 20,30 Z"></path><path class="tg-path" d="M34,30 Q39,26 44,30 Q39,33 34,30 Z"></path>
+      <ellipse class="tg-glow" cx="25" cy="30" rx="1.6" ry="2.4"></ellipse><ellipse class="tg-glow" cx="39" cy="30" rx="1.6" ry="2.4"></ellipse>
+      <path class="tg-path" d="M28,39 L36,39 L32,44 Z"></path><path class="tg-path" d="M32,44 L32,48"></path>
+      <path class="tg-path" d="M18,34 Q12,36 9,40"></path><path class="tg-path" d="M46,34 Q52,36 55,40"></path>
+      <path class="tg-path" d="M22,43 L7,39"></path><path class="tg-path" d="M22,46 L8,51"></path><path class="tg-path" d="M42,43 L57,39"></path><path class="tg-path" d="M42,46 L56,51"></path>
+    </svg>
+    <div style="font-size:14px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;margin-top:8px">טוען נתונים<span style="animation:tgDots 1.4s infinite">.</span><span style="animation:tgDots 1.4s infinite .2s">.</span><span style="animation:tgDots 1.4s infinite .4s">.</span></div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px;margin-top:6px">פלוגה א׳ · TIGER</div>
+  </div>`;
 
   // Load all data from Firestore
   try {
