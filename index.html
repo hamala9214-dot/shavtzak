@@ -36,13 +36,9 @@
   @keyframes tgFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
   @keyframes tgGlow { 0%,100%{opacity:.4} 50%{opacity:1} }
   @keyframes tgBlink { 0%,90%,100%{transform:scaleY(1)} 95%{transform:scaleY(.1)} }
-  @keyframes tgDots { 0%,20%{opacity:.15} 50%{opacity:1} 100%{opacity:.15} }
 
   .tiger-mark { display:block; stroke: var(--accent); fill:none; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; }
   .tiger-mark .tg-eye { fill: var(--accent); stroke:none; transform-box:fill-box; transform-origin:center; animation: tgBlink 4.4s ease-in-out infinite; }
-  .tiger-loader { display:block; width:128px; margin:0 auto; stroke: var(--accent); fill:none; stroke-width:2.3; stroke-linecap:round; stroke-linejoin:round; animation: tgFloat 4s ease-in-out infinite; overflow:visible; }
-  .tiger-loader .tg-path { stroke-dasharray:240; animation: tgDraw 5s ease-in-out infinite; }
-  .tiger-loader .tg-glow { fill: var(--accent); stroke:none; animation: tgGlow 3s ease-in-out infinite; }
 
   body {
     font-family: var(--font);
@@ -214,13 +210,10 @@
     transition: all 0.15s;
   }
   .tag:hover { border-color: var(--danger); color: var(--danger); }
-  .tag-accent { background: rgba(232,160,32,0.15); border-color: var(--accent); color: var(--accent); }
+  .tag-accent { background: rgba(240,168,41,0.15); border-color: var(--accent); color: var(--accent); }
 
   /* ===== SEARCH ===== */
-  .search-wrap {
-    position: relative;
-    margin-bottom: 16px;
-  }
+  .search-wrap { position: relative; margin-bottom: 16px; }
   .search-wrap input { padding-right: 36px; }
   .search-icon {
     position: absolute;
@@ -241,22 +234,13 @@
     margin-bottom: 20px;
   }
 
-  .date-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .date-nav { display: flex; align-items: center; gap: 8px; }
   .date-display {
     font-weight: 600;
     font-size: 15px;
     min-width: 120px;
     text-align: center;
     font-family: var(--mono);
-  }
-
-  .roster-grid {
-    display: grid;
-    gap: 16px;
   }
 
   .shift-block {
@@ -277,7 +261,7 @@
   .shift-0 .shift-header { background: var(--shift1); border-color: #1e4a60; }
   .shift-1 .shift-header { background: var(--shift2); border-color: #1e401e; }
   .shift-2 .shift-header { background: var(--shift3); border-color: #401e40; }
-  .shift-allday .shift-header { background: rgba(232,160,32,0.1); border-color: rgba(232,160,32,0.3); }
+  .shift-allday .shift-header { background: rgba(240,168,41,0.1); border-color: rgba(240,168,41,0.3); }
 
   .shift-time { color: var(--text-muted); font-size: 11px; font-weight: 500; font-family: var(--mono); letter-spacing: 0.5px; }
 
@@ -288,10 +272,7 @@
     background: var(--border);
   }
 
-  .position-cell {
-    background: var(--surface);
-    padding: 12px;
-  }
+  .position-cell { background: var(--surface); padding: 12px; }
   .position-name {
     font-size: 11px;
     font-weight: 600;
@@ -363,7 +344,7 @@
   .stat-value { font-size: 24px; font-weight: 700; color: var(--accent); font-family: var(--mono); }
   .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-  /* ===== ABSENCE CALENDAR ===== */
+  /* ===== ABSENCE ===== */
   .absence-list { display: flex; flex-direction: column; gap: 8px; }
   .absence-item {
     display: flex;
@@ -375,7 +356,7 @@
     border: 1px solid var(--border);
   }
   .absence-soldier { font-weight: 600; flex: 1; }
-  .absence-dates { color: var(--text-muted); font-size: 12px; }
+  .absence-dates { color: var(--text-muted); font-size: 12px; font-family: var(--mono); }
   .absence-reason { color: var(--text-dim); font-size: 11px; }
 
   /* ===== MODAL ===== */
@@ -443,104 +424,135 @@
     margin-bottom: 6px;
     letter-spacing: 2px;
   }
-  .login-sub {
-    color: var(--text-muted);
-    font-size: 12px;
-    margin-bottom: 24px;
-  }
-  .login-box input {
-    margin-bottom: 12px;
-    text-align: center;
-    letter-spacing: 2px;
-  }
+  .login-sub { color: var(--text-muted); font-size: 12px; margin-bottom: 24px; }
+  .login-box input { margin-bottom: 12px; text-align: center; letter-spacing: 2px; }
   .login-error { color: var(--danger); font-size: 12px; margin-top: 8px; }
 
   /* ===== PILLS ===== */
-  .pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: 600;
-  }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
   .pill-green { background: rgba(63,185,80,0.15); color: var(--success); }
   .pill-red { background: rgba(224,82,82,0.15); color: var(--danger); }
-  .pill-yellow { background: rgba(232,160,32,0.15); color: var(--accent); }
+  .pill-yellow { background: rgba(240,168,41,0.15); color: var(--accent); }
 
-  /* ===== ASSIGN DROPDOWN ===== */
-  .assign-select {
-    font-size: 11px;
-    padding: 4px 6px;
-    width: 100%;
-    margin-bottom: 4px;
-  }
+  .assign-select { font-size: 11px; padding: 4px 6px; width: 100%; margin-bottom: 4px; }
 
-  /* ===== LOAD DIVIDER ===== */
   .load-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
-  .load-bar {
-    height: 4px;
-    border-radius: 2px;
-    background: var(--border);
-    flex: 1;
-    overflow: hidden;
-  }
-  .load-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: var(--accent);
-    transition: width 0.3s;
-  }
-  .load-text { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+  .load-bar { height: 4px; border-radius: 2px; background: var(--border); flex: 1; overflow: hidden; }
+  .load-fill { height: 100%; border-radius: 2px; background: var(--accent); transition: width 0.3s; }
+  .load-text { font-size: 10px; color: var(--text-muted); white-space: nowrap; font-family: var(--mono); }
 
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: var(--text-muted);
-    font-size: 13px;
-  }
+  .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 13px; }
   .empty-state .icon { font-size: 32px; margin-bottom: 8px; }
 
-  /* ===== SKILLS CHECKBOXES ===== */
-  .skills-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 6px;
-  }
-  .skill-check {
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .skill-check { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: var(--text-muted); }
+  .skill-check input[type=checkbox] { width: 14px; height: 14px; accent-color: var(--accent); cursor: pointer; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  .alert { padding: 10px 14px; border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 12px; }
+  .alert-info { background: rgba(240,168,41,0.1); border: 1px solid rgba(240,168,41,0.3); color: var(--accent); }
+  .alert-danger { background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.3); color: var(--danger); }
+
+  /* ===== ROSTER TABLE ===== */
+  .roster-table-wrap { margin-bottom: 20px; }
+  .roster-table-header {
     display: flex;
     align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-size: 12px;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+    border-top: 2px solid var(--accent);
+  }
+  .roster-table-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+  .roster-table-scroll { overflow-x: auto; }
+  .roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+    font-size: 13px;
+  }
+  .roster-table thead th {
+    background: var(--surface2);
     color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--mono);
+    letter-spacing: 0.5px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    text-align: center;
   }
-  .skill-check input[type=checkbox] {
-    width: 14px;
-    height: 14px;
-    accent-color: var(--accent);
+  .roster-table thead th.role-col {
+    text-align: right;
+    min-width: 70px;
+    width: 70px;
+  }
+  .roster-table tbody tr:hover td { background: rgba(240,168,41,0.04); }
+  .roster-table tbody tr:last-child td { border-bottom: none; }
+  .roster-table td {
+    padding: 7px 14px;
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    text-align: center;
+    vertical-align: middle;
+    min-width: 110px;
+  }
+  .roster-table td.role-col {
+    text-align: right;
+    border-left: 2px solid var(--border);
+    background: var(--surface2);
+    min-width: 70px;
+    width: 70px;
+  }
+  .role-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .soldier-cell {
+    position: relative;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .soldier-cell .cell-edit {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 0 0 6px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-family: var(--font);
+  }
+  .soldier-cell:hover .cell-edit { opacity: 1; }
+  .soldier-cell.cell-empty {
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 11px;
     cursor: pointer;
   }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 16px 0;
-  }
-
-  /* ===== ALERT ===== */
-  .alert {
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    margin-bottom: 12px;
-  }
-  .alert-info { background: rgba(232,160,32,0.1); border: 1px solid rgba(232,160,32,0.3); color: var(--accent); }
-  .alert-danger { background: rgba(224,82,82,0.1); border: 1px solid rgba(224,82,82,0.3); color: var(--danger); }
+  .soldier-cell.cell-empty:hover { color: var(--accent); background: rgba(240,168,41,0.05); }
+  .soldier-cell.cell-conflict { color: var(--danger); background: rgba(224,82,82,0.08); }
+  .time-col { min-width: 110px; }
 
   @media (max-width: 768px) {
     main { padding: 12px; }
-    .positions-grid { grid-template-columns: 1fr 1fr; }
     .modal { min-width: unset; }
     .form-row { flex-direction: column; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
@@ -969,21 +981,50 @@ let isAdmin = false;
 let currentDate = new Date();
 currentDate.setHours(0,0,0,0);
 
-const DEFAULT_SKILLS = ['נהג','חובש','מפקד','חמליסט'];
+const DEFAULT_SKILLS = ['נהג','חובש','מפקד','חמליסט','קצין'];
 
 const DEFAULT_POSITIONS = [
-  { id: 'p1', name: 'סיור', count: 4, type: 'shift', skills: [], slotLabels: ['מפקד','נהג'] },
-  { id: 'p2', name: 'כרמל א', count: 8, type: 'allday', skills: [], slotLabels: ['מפקד','נהג'] },
-  { id: 'p3', name: 'כרמל ב', count: 4, type: 'allday', skills: [], slotLabels: ['מפקד','נהג'] },
-  { id: 'p4', name: 'חמל', count: 1, type: 'shift', skills: ['חמליסט'] },
-  { id: 'p5', name: 'משימות מיוחדות', count: 12, type: 'allday', skills: [] },
-  { id: 'p6', name: 'חפ"ק', count: 4, type: 'allday', skills: [], slotLabels: ['מפקד','נהג','חובש'] },
+  // allday
+  { id: 'p_chapak', name: 'חפ"ק', count: 4, type: 'allday', skills: [], slotLabels: ['קצין','חובש','לוחם','לוחם'] },
+
+  // timed — סיור (3 משמרות, האחרונה חוצה חצות)
+  { id: 'p_siyur_a', name: 'סיור', count: 3, type: 'timed', startHour: 5,  endHour: 13, skills: [], slotLabels: ['מפקד','לוחם','לוחם'] },
+  { id: 'p_siyur_b', name: 'סיור', count: 3, type: 'timed', startHour: 13, endHour: 21, skills: [], slotLabels: ['מפקד','לוחם','לוחם'] },
+  { id: 'p_siyur_c', name: 'סיור', count: 3, type: 'timed', startHour: 21, endHour: 29, skills: [], slotLabels: ['מפקד','לוחם','לוחם'] },
+
+  // timed — חמל (3 משמרות, הראשונה חוצה חצות)
+  { id: 'p_hamal_a', name: 'חמל', count: 1, type: 'timed', startHour: 22, endHour: 30, skills: ['חמליסט'], slotLabels: ['חמליסט'] },
+  { id: 'p_hamal_b', name: 'חמל', count: 1, type: 'timed', startHour: 6,  endHour: 14, skills: ['חמליסט'], slotLabels: ['חמליסט'] },
+  { id: 'p_hamal_c', name: 'חמל', count: 1, type: 'timed', startHour: 14, endHour: 22, skills: ['חמליסט'], slotLabels: ['חמליסט'] },
+
+  // allday — יזומה וסוואנה
+  { id: 'p_yizuma', name: 'יזומה', count: 7, type: 'allday', skills: [], slotLabels: ['מפקד','לוחם','לוחם','לוחם','לוחם','לוחם','לוחם'] },
+  { id: 'p_savana', name: 'סוואנה', count: 5, type: 'allday', skills: [], slotLabels: ['מפקד','לוחם','לוחם','לוחם','לוחם'] },
+
+  // timed — תורני מפלג (1 משמרת)
+  { id: 'p_torani', name: 'תורני מפלג', count: 2, type: 'timed', startHour: 8, endHour: 20, skills: [], slotLabels: ['לוחם','לוחם'] },
+
+  // timed — ש״ג (6 × 4 שעות)
+  { id: 'p_shag_a', name: 'ש"ג', count: 1, type: 'timed', startHour: 2,  endHour: 6,  skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_shag_b', name: 'ש"ג', count: 1, type: 'timed', startHour: 6,  endHour: 10, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_shag_c', name: 'ש"ג', count: 1, type: 'timed', startHour: 10, endHour: 14, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_shag_d', name: 'ש"ג', count: 1, type: 'timed', startHour: 14, endHour: 18, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_shag_e', name: 'ש"ג', count: 1, type: 'timed', startHour: 18, endHour: 22, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_shag_f', name: 'ש"ג', count: 1, type: 'timed', startHour: 22, endHour: 26, skills: [], slotLabels: ['לוחם'] },
+
+  // timed — מגדל (6 × 4 שעות)
+  { id: 'p_migdal_a', name: 'מגדל', count: 1, type: 'timed', startHour: 2,  endHour: 6,  skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_migdal_b', name: 'מגדל', count: 1, type: 'timed', startHour: 6,  endHour: 10, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_migdal_c', name: 'מגדל', count: 1, type: 'timed', startHour: 10, endHour: 14, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_migdal_d', name: 'מגדל', count: 1, type: 'timed', startHour: 14, endHour: 18, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_migdal_e', name: 'מגדל', count: 1, type: 'timed', startHour: 18, endHour: 22, skills: [], slotLabels: ['לוחם'] },
+  { id: 'p_migdal_f', name: 'מגדל', count: 1, type: 'timed', startHour: 22, endHour: 26, skills: [], slotLabels: ['לוחם'] },
 ];
 
 const SHIFTS = [
-  { id: 0, label: 'משמרת א׳', time: '00:00–08:00' },
-  { id: 1, label: 'משמרת ב׳', time: '08:00–16:00' },
-  { id: 2, label: 'משמרת ג׳', time: '16:00–00:00' },
+  { id: 0, label: 'משמרת א׳', time: '00:00–08:00', startHour: 0,  endHour: 8  },
+  { id: 1, label: 'משמרת ב׳', time: '08:00–16:00', startHour: 8,  endHour: 16 },
+  { id: 2, label: 'משמרת ג׳', time: '16:00–00:00', startHour: 16, endHour: 24 },
 ];
 
 // ===== FIREBASE SAVE/LOAD (replaces localStorage) =====
@@ -1045,22 +1086,7 @@ async function launchApp() {
   document.getElementById('app').style.display = 'block';
 
   // Show loading state
-  document.getElementById('roster-content').innerHTML = `<div style="text-align:center;padding:52px 20px">
-    <svg class="tiger-loader" viewBox="0 0 64 64" aria-hidden="true">
-      <circle class="tg-glow" cx="25" cy="30" r="4.5" style="filter:blur(3px)"></circle>
-      <circle class="tg-glow" cx="39" cy="30" r="4.5" style="filter:blur(3px)"></circle>
-      <path class="tg-path" d="M20,22 L15,7 L29,17"></path><path class="tg-path" d="M44,22 L49,7 L35,17"></path>
-      <path class="tg-path" d="M14,30 Q13,49 32,57 Q51,49 50,30 Q48,16 32,16 Q16,16 14,30 Z"></path>
-      <path class="tg-path" d="M32,16 L32,9"></path><path class="tg-path" d="M27,17 L25,10"></path><path class="tg-path" d="M37,17 L39,10"></path>
-      <path class="tg-path" d="M20,30 Q25,26 30,30 Q25,33 20,30 Z"></path><path class="tg-path" d="M34,30 Q39,26 44,30 Q39,33 34,30 Z"></path>
-      <ellipse class="tg-glow" cx="25" cy="30" rx="1.6" ry="2.4"></ellipse><ellipse class="tg-glow" cx="39" cy="30" rx="1.6" ry="2.4"></ellipse>
-      <path class="tg-path" d="M28,39 L36,39 L32,44 Z"></path><path class="tg-path" d="M32,44 L32,48"></path>
-      <path class="tg-path" d="M18,34 Q12,36 9,40"></path><path class="tg-path" d="M46,34 Q52,36 55,40"></path>
-      <path class="tg-path" d="M22,43 L7,39"></path><path class="tg-path" d="M22,46 L8,51"></path><path class="tg-path" d="M42,43 L57,39"></path><path class="tg-path" d="M42,46 L56,51"></path>
-    </svg>
-    <div style="font-size:14px;font-weight:600;color:var(--text-muted);letter-spacing:.5px;margin-top:8px">טוען נתונים<span style="animation:tgDots 1.4s infinite">.</span><span style="animation:tgDots 1.4s infinite .2s">.</span><span style="animation:tgDots 1.4s infinite .4s">.</span></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px;margin-top:6px">פלוגה א׳ · TIGER</div>
-  </div>`;
+  document.getElementById('roster-content').innerHTML = '<div class="empty-state"><div class="icon">⏳</div><div>טוען נתונים...</div></div>';
 
   // Load all data from Firestore
   try {
@@ -1167,73 +1193,155 @@ function getAbsentSoldierIds(dateStr) {
     .map(a => a.soldierId);
 }
 
+const MIN_GAP_HOURS = 4;
+
+// Returns array of {start, end} for all assignments of a soldier today
+function getSoldierRanges(soldierId, roster, excludePosId, excludeSlotIdx) {
+  const ranges = [];
+  // shifts
+  SHIFTS.forEach(sh => {
+    if (roster.shifts && roster.shifts[sh.id]) {
+      positions.filter(p => p.type === 'shift').forEach(pos => {
+        (roster.shifts[sh.id][pos.id] || []).forEach((id, idx) => {
+          if (id === soldierId && !(pos.id === excludePosId && idx === excludeSlotIdx)) {
+            ranges.push({ start: sh.startHour, end: sh.endHour, label: `${pos.name} (${sh.label})` });
+          }
+        });
+      });
+    }
+  });
+  // timed + allday
+  positions.filter(p => p.type === 'timed' || p.type === 'allday').forEach(pos => {
+    (roster.allday && roster.allday[pos.id] || []).forEach((id, idx) => {
+      if (id === soldierId && !(pos.id === excludePosId && idx === excludeSlotIdx)) {
+        const start = pos.startHour !== undefined ? pos.startHour : 0;
+        const end   = pos.endHour   !== undefined ? pos.endHour   : 24;
+        ranges.push({ start, end, label: `${pos.name} (${timedLabel(pos)})` });
+      }
+    });
+  });
+  return ranges;
+}
+
+// Returns conflict description or null
+function getGapConflict(existingRanges, newStart, newEnd) {
+  for (const r of existingRanges) {
+    const gapOk = newStart >= r.end + MIN_GAP_HOURS || newEnd <= r.start - MIN_GAP_HOURS;
+    if (!gapOk) return r.label || 'משמרת קיימת';
+  }
+  return null;
+}
+
+function timedLabel(pos) {
+  const sh = `${String(pos.startHour).padStart(2,'0')}:00`;
+  const eh = pos.endHour >= 24
+    ? `${String(pos.endHour - 24).padStart(2,'0')}:00+`
+    : `${String(pos.endHour).padStart(2,'0')}:00`;
+  return `${sh}–${eh}`;
+}
+
 function renderRoster() {
   updateHeaderDate();
   const roster = getRoster();
   const dStr = dateStr(currentDate);
   const absentIds = getAbsentSoldierIds(dStr);
   const container = document.getElementById('roster-content');
-
-  // Filter out expired positions for current date
   const activePositions = positions.filter(p => !p.expiry || p.expiry >= dStr);
 
   let html = '';
 
-  // All-day positions
-  const alldayPositions = activePositions.filter(p => p.type === 'allday');
-  if (alldayPositions.length) {
-    html += `<div class="shift-block shift-allday" style="margin-bottom:16px">
-      <div class="shift-header">
-        <span>⭐ כל היום</span>
-      </div>
-      <div class="positions-grid">`;
-    alldayPositions.forEach(pos => {
-      const assigned = roster.allday[pos.id] || [];
-      html += renderPositionCell(pos, assigned, absentIds, 'allday', null);
-    });
-    html += `</div></div>`;
-  }
-
-  // Shift positions
-  const shiftPositions = activePositions.filter(p => p.type === 'shift');
-
-  if (shiftPositions.length) SHIFTS.forEach(shift => {
-    if (!roster.shifts[shift.id]) roster.shifts[shift.id] = {};
-    html += `<div class="shift-block shift-${shift.id}" style="margin-bottom:16px">
-      <div class="shift-header">
-        <span>${shift.label}</span>
-        <span class="shift-time">${shift.time}</span>
-      </div>
-      <div class="positions-grid">`;
-    shiftPositions.forEach(pos => {
-      const assigned = roster.shifts[shift.id][pos.id] || [];
-      html += renderPositionCell(pos, assigned, absentIds, 'shift', shift.id);
-    });
-    html += `</div></div>`;
+  // Group timed positions by name
+  const timedByName = {};
+  activePositions.filter(p => p.type === 'timed').forEach(pos => {
+    if (!timedByName[pos.name]) timedByName[pos.name] = [];
+    timedByName[pos.name].push(pos);
   });
 
-  // Timed positions
-  const timedPositions = activePositions.filter(p => p.type === 'timed');
-  if (timedPositions.length) {
-    timedPositions.forEach(pos => {
-      const label = `${String(pos.startHour).padStart(2,'0')}:00–${String(pos.endHour).padStart(2,'0')}:00`;
-      const assigned = roster.allday[pos.id] || [];
-      html += `<div class="shift-block" style="margin-bottom:16px;border-color:#2a3a50">
-        <div class="shift-header" style="background:#1a2535">
-          <span>🕐 ${pos.name}</span>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="shift-time">${label}</span>
-            ${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deletePosition('${pos.id}')" style="padding:2px 8px;font-size:11px">✕ מחק</button>` : ''}
-          </div>
-        </div>
-        <div class="positions-grid">
-          ${renderPositionCell(pos, assigned, absentIds, 'allday', null)}
-        </div>
-      </div>`;
-    });
-  }
+  // Sort groups by first position's startHour
+  const timedGroups = Object.entries(timedByName).sort((a, b) =>
+    (a[1][0].startHour || 0) - (b[1][0].startHour || 0)
+  );
 
-  // Add position button
+  // Render each timed group as a table (columns = time slots)
+  timedGroups.forEach(([name, group]) => {
+    // Sort by startHour
+    group.sort((a, b) => a.startHour - b.startHour);
+    const maxCount = Math.max(...group.map(p => p.count));
+    const deleteBtn = isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deletePositionGroup('${name}')" style="padding:2px 8px;font-size:11px;margin-right:8px">✕ מחק</button>` : '';
+
+    html += `<div class="roster-table-wrap" style="margin-bottom:20px">
+      <div class="roster-table-header">
+        <span class="roster-table-title">${name}</span>
+        ${deleteBtn}
+      </div>
+      <div class="roster-table-scroll">
+      <table class="roster-table">
+        <thead><tr>
+          <th class="role-col"></th>
+          ${group.map(pos => `<th class="time-col">${timedLabel(pos)}</th>`).join('')}
+        </tr></thead>
+        <tbody>`;
+
+    for (let i = 0; i < maxCount; i++) {
+      const roleLabel = group[0].slotLabels && group[0].slotLabels[i] ? group[0].slotLabels[i] : '';
+      html += `<tr>
+        <td class="role-col">${roleLabel ? `<span class="role-tag">${roleLabel}</span>` : ''}</td>
+        ${group.map(pos => {
+          const assigned = roster.allday[pos.id] || [];
+          const sid = assigned[i];
+          const soldier = sid ? soldiers.find(s => s.id === sid) : null;
+          const isAbsent = sid && absentIds.includes(sid);
+          const conflict = isAbsent;
+          if (soldier) {
+            return `<td class="soldier-cell ${conflict ? 'cell-conflict' : ''}">
+              <span>${soldier.name}${conflict ? ' ⚠' : ''}</span>
+              ${isAdmin ? `<button class="cell-edit" onclick="openSlotModal('allday','null','${pos.id}',${i})">✎</button>` : ''}
+            </td>`;
+          } else {
+            return isAdmin
+              ? `<td class="soldier-cell cell-empty" onclick="openSlotModal('allday','null','${pos.id}',${i})">+ הצב</td>`
+              : `<td class="soldier-cell cell-empty">פנוי</td>`;
+          }
+        }).join('')}
+      </tr>`;
+    }
+
+    html += `</tbody></table></div></div>`;
+  });
+
+  // allday positions (חפ"ק וכו') — vertical table: role | name
+  const alldayPositions = activePositions.filter(p => p.type === 'allday');
+  alldayPositions.forEach(pos => {
+    const assigned = roster.allday[pos.id] || [];
+    html += `<div class="roster-table-wrap" style="margin-bottom:20px">
+      <div class="roster-table-header">
+        <span class="roster-table-title">${pos.name}</span>
+      </div>
+      <div class="roster-table-scroll">
+      <table class="roster-table">
+        <thead><tr><th class="role-col">תפקיד</th><th>שם</th></tr></thead>
+        <tbody>`;
+    for (let i = 0; i < pos.count; i++) {
+      const roleLabel = pos.slotLabels && pos.slotLabels[i] ? pos.slotLabels[i] : '';
+      const sid = assigned[i];
+      const soldier = sid ? soldiers.find(s => s.id === sid) : null;
+      const isAbsent = sid && absentIds.includes(sid);
+      html += `<tr>
+        <td class="role-col">${roleLabel ? `<span class="role-tag">${roleLabel}</span>` : ''}</td>
+        ${soldier
+          ? `<td class="soldier-cell ${isAbsent ? 'cell-conflict' : ''}">
+              <span>${soldier.name}${isAbsent ? ' ⚠' : ''}</span>
+              ${isAdmin ? `<button class="cell-edit" onclick="openSlotModal('allday','null','${pos.id}',${i})">✎</button>` : ''}
+             </td>`
+          : isAdmin
+            ? `<td class="soldier-cell cell-empty" onclick="openSlotModal('allday','null','${pos.id}',${i})">+ הצב</td>`
+            : `<td class="soldier-cell cell-empty">פנוי</td>`
+        }
+      </tr>`;
+    }
+    html += `</tbody></table></div></div>`;
+  });
+
   if (isAdmin) {
     html += `<button class="btn btn-ghost" onclick="openAddPosition()" style="margin-top:8px">+ הוסף עמדה / משימה</button>`;
   }
@@ -1241,46 +1349,14 @@ function renderRoster() {
   container.innerHTML = html;
 }
 
-function renderPositionCell(pos, assigned, absentIds, type, shiftId) {
-  let slots = '';
-  for (let i = 0; i < pos.count; i++) {
-    const sid = assigned[i];
-    const label = pos.slotLabels && pos.slotLabels[i] ? `<span style="font-size:10px;color:var(--accent);margin-left:4px;font-weight:600">${pos.slotLabels[i]}</span>` : '';
-    if (sid) {
-      const soldier = soldiers.find(s => s.id === sid);
-      const name = soldier ? soldier.name : '?';
-      const isAbsent = absentIds.includes(sid);
-      const conflict = isAbsent;
-      if (isAdmin) {
-        slots += `<div class="soldier-slot ${conflict ? 'slot-conflict' : ''}">
-          <span>${label}${name}${conflict ? ' ⚠' : ''}</span>
-          <button class="slot-remove" onclick="openSlotModal('${type}','${shiftId}','${pos.id}',${i})" title="שנה">✎</button>
-        </div>`;
-      } else {
-        slots += `<div class="soldier-slot ${conflict ? 'slot-conflict' : ''}">
-          <span>${label}${name}${conflict ? ' ⚠' : ''}</span>
-        </div>`;
-      }
-    } else {
-      if (isAdmin) {
-        slots += `<div class="soldier-slot slot-empty" onclick="openSlotModal('${type}','${shiftId}','${pos.id}',${i})" style="cursor:pointer">${label ? label + ' ' : ''}+ הצב חייל</div>`;
-      } else {
-        slots += `<div class="soldier-slot slot-empty">${label ? label + ' ' : ''}פנוי</div>`;
-      }
-    }
-  }
-
-  const skillBadges = pos.skills && pos.skills.length
-    ? `<span style="color:var(--accent);font-size:10px"> [${pos.skills.join(', ')}]</span>` : '';
-
-  return `<div class="position-cell">
-    <div class="position-name">
-      ${pos.name}${skillBadges}
-      <span class="position-capacity">${assigned.filter(Boolean).length}/${pos.count}</span>
-    </div>
-    ${slots}
-  </div>`;
+function deletePositionGroup(name) {
+  if (!confirm(`למחוק את כל עמדות "${name}"?`)) return;
+  positions = positions.filter(p => p.name !== name);
+  save('positions', positions);
+  renderRoster();
 }
+
+function renderPositionCell() {} // legacy stub — no longer used
 
 // ===== SLOT MODAL =====
 function openSlotModal(type, shiftId, posId, slotIdx) {
@@ -1318,14 +1394,28 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
         <option value="">— פנוי —</option>
         ${available.map(s => {
           if (s.id === current) return `<option value="${s.id}" selected>${s.name} (${s.rank})</option>`;
+
           const locations = (allAssigned.locationOf[s.id] || []);
-          // For shift slots: check direct conflict in this shift OR timed overlap already injected
           const conflictInThisShift = type === 'shift' && allAssigned.shift[editSlotCtx.shiftId] && allAssigned.shift[editSlotCtx.shiftId].includes(s.id);
-          // For allday/timed slots: check if already in allday list
-          const conflictAllday = (type === 'allday') && allAssigned.allday.includes(s.id);
-          const hasConflict = conflictInThisShift || conflictAllday;
-          const warn = hasConflict && locations.length ? ` ⚠ משובץ ב: ${locations.join(', ')}` : '';
-          return `<option value="${s.id}">${s.name} (${s.rank})${warn}</option>`;
+          const conflictAllday = type === 'allday' && allAssigned.allday.includes(s.id);
+          if (conflictInThisShift || conflictAllday) {
+            return `<option value="${s.id}" disabled style="color:var(--text-dim)">${s.name} (${s.rank}) ⚠ משובץ ב: ${locations.join(', ')}</option>`;
+          }
+
+          // Gap check
+          const existingRanges = getSoldierRanges(s.id, getRoster(), pos.id, slotIdx);
+          const newStart = type === 'shift'
+            ? (SHIFTS.find(sh => sh.id === editSlotCtx.shiftId) || {}).startHour || 0
+            : (pos.startHour !== undefined ? pos.startHour : 0);
+          const newEnd = type === 'shift'
+            ? (SHIFTS.find(sh => sh.id === editSlotCtx.shiftId) || {}).endHour || 8
+            : (pos.endHour !== undefined ? pos.endHour : 24);
+          const gapConflictLabel = getGapConflict(existingRanges, newStart, newEnd);
+          if (gapConflictLabel) {
+            return `<option value="${s.id}" disabled style="color:var(--text-dim)">${s.name} (${s.rank}) ⛔ פחות מ-4ש׳ הפסקה (${gapConflictLabel})</option>`;
+          }
+
+          return `<option value="${s.id}">${s.name} (${s.rank})</option>`;
         }).join('')}
       </select>
     </div>
@@ -1338,7 +1428,9 @@ function openSlotModal(type, shiftId, posId, slotIdx) {
 function shiftsOverlap(startHour, endHour, shiftId) {
   const shiftRanges = { 0: [0,8], 1: [8,16], 2: [16,24] };
   const [ss, se] = shiftRanges[shiftId] || [0,0];
-  return startHour < se && endHour > ss;
+  // normalize endHour > 24 (e.g. 26 = next day 02:00, treat as 24 for overlap with shift 2)
+  const normEnd = Math.min(endHour, 24);
+  return startHour < se && normEnd > ss;
 }
 
 function getAllAssignedToday() {
@@ -1373,7 +1465,7 @@ function getAllAssignedToday() {
       if (id) {
         result.allday.push(id);
         if (!result.locationOf[id]) result.locationOf[id] = [];
-        const label = `${String(pos.startHour).padStart(2,'0')}:00–${String(pos.endHour).padStart(2,'0')}:00`;
+        const label = timedLabel(pos);
         result.locationOf[id].push(`${pos.name} (${label})`);
         // also mark as conflicting with overlapping shifts
         SHIFTS.forEach(sh => {
